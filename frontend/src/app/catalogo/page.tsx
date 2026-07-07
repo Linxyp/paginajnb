@@ -1,15 +1,6 @@
 import Link from 'next/link';
 import Image from 'next/image';
-
-async function getAllProducts() {
-    try {
-        const res = await fetch('http://localhost:4000/api/products', { cache: 'no-store' });
-        if (!res.ok) return [];
-        return res.json();
-    } catch {
-        return [];
-    }
-}
+import { getAllProducts, Product } from '@/lib/api';
 
 export default async function CatalogPage() {
     const products = await getAllProducts();
@@ -25,7 +16,7 @@ export default async function CatalogPage() {
                 <p className="text-gray-500 bg-white p-8 rounded-xl border text-center">No se encontraron artículos disponibles en el inventario.</p>
             ) : (
                 <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                    {products.map((p: any) => (
+                    {products.map((p: Product) => (
                         <div key={p.id} className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden flex flex-col hover:shadow-lg transition-shadow">
                             <div className="relative w-full h-48 bg-gray-50 p-4">
                                 <Image src={`/productos/${p.images[0]}`} alt={p.name} fill className="object-contain" />

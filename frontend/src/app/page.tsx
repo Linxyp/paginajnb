@@ -1,8 +1,12 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { ShoppingCart, Star, ChevronLeft, ChevronRight, ShoppingBag } from 'lucide-react';
+import { ChevronLeft, ChevronRight, ShoppingBag, PackageSearch } from 'lucide-react';
+import { getAllProducts, Product } from '@/lib/api';
+import { useCartStore } from '@/store/useCartStore';
+import { useToastStore } from '@/store/useToastStore';
 
 // ─── DATA ────────────────────────────────────────────────────────────────────
 
@@ -49,17 +53,6 @@ const heroSlides = [
   },
 ];
 
-const products = [
-  { id: 'REF001', name: 'Radio Android 9" Mazda 3',          category: 'Radios OEM',   price: 1250000, oldPrice: 1500000, rating: 5, discount: 15, badge: 'SALE',   icon: '📻' },
-  { id: 'REF002', name: 'Tapetes Termoformados a Medida',    category: 'Interior',     price:  249000, oldPrice:  300000, rating: 5, discount: 17, badge: 'TOP',    icon: '🟫' },
-  { id: 'REF003', name: 'Caja Turbo Subwoofer Bajos Precisos', category: 'Car Audio', price:  450000, oldPrice:  520000, rating: 5, discount: 13, badge: 'NUEVO',  icon: '🔊' },
-  { id: 'REF004', name: 'Bombillos LED JNB-IHK K1 PRO',     category: 'Iluminación',  price:  180000, oldPrice:  220000, rating: 5, discount: 18, badge: 'SALE',   icon: '💡' },
-  { id: 'REF005', name: 'Cámara de Reversa HD',              category: 'Cámaras',      price:  120000, oldPrice:  160000, rating: 4, discount: 25, badge: 'POPULAR', icon: '📷' },
-  { id: 'REF006', name: 'Amplificador 4 Canales 1000W',      category: 'Car Audio',    price:  380000, oldPrice:  450000, rating: 5, discount: 16, badge: 'NUEVO',  icon: '🎛️' },
-  { id: 'REF007', name: 'Radio Universal 7" Android 12',     category: 'Radios OEM',   price:  890000, oldPrice: 1050000, rating: 4, discount: 15, badge: 'SALE',   icon: '📺' },
-  { id: 'REF008', name: 'Alarma con Sensor de Presencia',    category: 'Alarmas',      price:  220000, oldPrice:  280000, rating: 5, discount: 21, badge: 'NUEVO',  icon: '🔒' },
-];
-
 const tickerItems = [
   '🔥 Hasta 20% OFF en Radios Android',
   '⚡ Instalación Profesional Incluida',
@@ -83,13 +76,6 @@ const stats = [
 // ─── HELPERS ─────────────────────────────────────────────────────────────────
 
 const fmt = (n: number) => new Intl.NumberFormat('es-CO').format(n);
-
-const badgeColor: Record<string, string> = {
-  SALE:    'bg-[#C1121F] text-white',
-  NUEVO:   'bg-[#2B2D42] text-white',
-  TOP:     'bg-orange-500 text-white',
-  POPULAR: 'bg-orange-500 text-white',
-};
 
 // ─── SUB-COMPONENTS ──────────────────────────────────────────────────────────
 
@@ -137,7 +123,7 @@ function HeroCarousel() {
 
   return (
     <section
-      className="relative w-full h-[580px] overflow-hidden"
+      className="relative w-full min-h-[480px] py-14 md:py-0 md:h-[580px] overflow-hidden"
       onMouseEnter={pauseAuto}
       onMouseLeave={resumeAuto}
     >
@@ -152,7 +138,7 @@ function HeroCarousel() {
       </div>
 
       {/* Content */}
-      <div className="relative z-10 h-full flex items-center px-10 md:px-20 max-w-[1400px] mx-auto">
+      <div className="relative z-10 h-full flex items-center px-6 sm:px-10 md:px-20 max-w-[1400px] mx-auto">
         <div className="max-w-[560px]">
           {/* Tag */}
           <span className="inline-block bg-[#C1121F] text-white text-[10px] font-extrabold tracking-[.2em] uppercase px-3.5 py-1.5 mb-5">
@@ -196,17 +182,17 @@ function HeroCarousel() {
         </div>
       </div>
 
-      {/* Arrow controls */}
+      {/* Arrow controls (desktop only — on mobile the stacked content runs the full height, so side arrows would overlap the text) */}
       <button
         onClick={() => goTo(current - 1)}
-        className="absolute left-4 top-1/2 -translate-y-1/2 z-20 w-10 h-10 border border-[#333] text-white flex items-center justify-center hover:bg-[#C1121F] hover:border-[#C1121F] transition-all"
+        className="hidden md:flex absolute left-4 top-1/2 -translate-y-1/2 z-20 w-10 h-10 border border-[#333] text-white items-center justify-center hover:bg-[#C1121F] hover:border-[#C1121F] transition-all"
         aria-label="Anterior"
       >
         <ChevronLeft size={18} />
       </button>
       <button
         onClick={() => goTo(current + 1)}
-        className="absolute right-4 top-1/2 -translate-y-1/2 z-20 w-10 h-10 border border-[#333] text-white flex items-center justify-center hover:bg-[#C1121F] hover:border-[#C1121F] transition-all"
+        className="hidden md:flex absolute right-4 top-1/2 -translate-y-1/2 z-20 w-10 h-10 border border-[#333] text-white items-center justify-center hover:bg-[#C1121F] hover:border-[#C1121F] transition-all"
         aria-label="Siguiente"
       >
         <ChevronRight size={18} />
@@ -228,47 +214,62 @@ function HeroCarousel() {
 }
 
 /** Product card */
-function ProductCard({ p }: { p: typeof products[0] }) {
+function ProductCard({ p }: { p: Product }) {
+  const addItem = useCartStore((state) => state.addItem);
+  const showToast = useToastStore((state) => state.show);
+  const lowStock = p.stock > 0 && p.stock <= 5;
+
+  const handleAdd = (e: React.MouseEvent) => {
+    e.preventDefault();
+    addItem({
+      id: p.id,
+      slug: p.slug,
+      name: p.name,
+      price: p.price,
+      image: p.images[0] || '',
+      maxStock: p.stock,
+    }, 1);
+    showToast(`"${p.name}" añadido al carrito.`, 'success');
+  };
+
   return (
-    <div className="bg-white border-[1.5px] border-[#f0f0f0] group cursor-pointer transition-all duration-250 hover:border-[#C1121F] hover:-translate-y-1">
-      {/* Badge */}
-      <div className="absolute top-3 left-3 z-10">
-        <span className={`text-[9px] font-extrabold tracking-[.15em] uppercase px-2 py-1 ${badgeColor[p.badge] ?? 'bg-[#2B2D42] text-white'}`}>
-          {p.badge}
-        </span>
-      </div>
-
-      {/* Image area */}
-      <div className="relative w-full h-52 bg-[#f8f9fa] flex items-center justify-center border-b border-[#f0f0f0] transition-colors group-hover:bg-[#f0f0f0] overflow-hidden">
-        <span className="text-6xl transition-transform duration-500 group-hover:scale-110">{p.icon}</span>
-        {/* Hover overlay CTA */}
-        <div className="absolute inset-0 bg-[#C1121F]/90 flex items-center justify-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-250">
-          <ShoppingBag size={16} className="text-white" />
-          <span className="text-white text-[11px] font-bold tracking-[.15em] uppercase">Agregar al Carrito</span>
+    <div className="relative bg-white border-[1.5px] border-[#f0f0f0] group transition-all duration-250 hover:border-[#C1121F] hover:-translate-y-1">
+      {lowStock && (
+        <div className="absolute top-3 left-3 z-10">
+          <span className="text-[9px] font-extrabold tracking-[.15em] uppercase px-2 py-1 bg-orange-500 text-white">
+            Pocas unidades
+          </span>
         </div>
-      </div>
+      )}
 
-      {/* Body */}
-      <div className="p-4 relative">
-        <div className="text-[9px] font-bold tracking-[.18em] uppercase text-[#C1121F] mb-1.5">{p.category}</div>
-        <h3 className="text-[13px] font-bold text-[#2B2D42] uppercase tracking-wide leading-snug group-hover:text-[#C1121F] transition-colors">
-          {p.name}
-        </h3>
-
-        {/* Stars */}
-        <div className="flex gap-0.5 my-2">
-          {[...Array(5)].map((_, i) => (
-            <Star key={i} size={11} className={i < p.rating ? 'fill-yellow-400 text-yellow-400' : 'fill-gray-200 text-gray-200'} />
-          ))}
+      <Link href={`/producto/${p.slug}`} className="block">
+        {/* Image area */}
+        <div className="relative w-full h-52 bg-[#f8f9fa] border-b border-[#f0f0f0] transition-colors group-hover:bg-[#f0f0f0] overflow-hidden">
+          {p.images[0] && (
+            <Image src={`/productos/${p.images[0]}`} alt={p.name} fill className="object-contain p-6 transition-transform duration-500 group-hover:scale-105" />
+          )}
         </div>
 
-        {/* Price */}
-        <div className="flex items-baseline gap-2">
-          <span className="text-[20px] font-black text-[#2B2D42]">${fmt(p.price)}</span>
-          <span className="text-[12px] text-[#bbb] line-through">${fmt(p.oldPrice)}</span>
-        </div>
+        {/* Body */}
+        <div className="p-4 relative">
+          <div className="text-[9px] font-bold tracking-[.18em] uppercase text-[#C1121F] mb-1.5">{p.category}</div>
+          <h3 className="text-[13px] font-bold text-[#2B2D42] uppercase tracking-wide leading-snug group-hover:text-[#C1121F] transition-colors h-9 line-clamp-2">
+            {p.name}
+          </h3>
 
-        <button className="w-full mt-3 bg-[#2B2D42] text-white text-[10px] font-bold tracking-[.18em] uppercase py-2.5 transition-colors hover:bg-[#C1121F]">
+          {/* Price */}
+          <div className="flex items-baseline gap-2 mt-2">
+            <span className="text-[20px] font-black text-[#2B2D42]">${fmt(p.price)}</span>
+          </div>
+        </div>
+      </Link>
+
+      <div className="px-4 pb-4">
+        <button
+          onClick={handleAdd}
+          className="w-full flex items-center justify-center gap-2 bg-[#2B2D42] text-white text-[10px] font-bold tracking-[.18em] uppercase py-2.5 transition-colors hover:bg-[#C1121F]"
+        >
+          <ShoppingBag size={14} />
           Agregar al Carrito
         </button>
       </div>
@@ -321,10 +322,18 @@ function StatItem({ target, suffix, label, isFloat }: { target: number; suffix: 
 
 export default function HomePage() {
   const [activeCategory, setActiveCategory] = useState('Todos');
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loadingProducts, setLoadingProducts] = useState(true);
+
+  useEffect(() => {
+    getAllProducts()
+      .then(setProducts)
+      .finally(() => setLoadingProducts(false));
+  }, []);
 
   const filteredProducts = activeCategory === 'Todos'
     ? products
-    : products.filter(p => p.category.toLowerCase().includes(activeCategory.toLowerCase().replace(' led', '').replace(' android', '')));
+    : products.filter(p => p.category === activeCategory);
 
   return (
     <div className="w-full bg-[#f4f5f7] min-h-screen font-sans">
@@ -403,7 +412,7 @@ export default function HomePage() {
         {/* Header */}
         <div className="flex items-end justify-between mb-8">
           <div>
-            <h2 className="text-2xl font-black text-[#2B2D42] uppercase tracking-widest">Nuevos Ingresos</h2>
+            <h2 className="text-2xl font-black text-[#2B2D42] uppercase tracking-widest">Productos Destacados</h2>
             <div className="w-10 h-[3px] bg-[#C1121F] mt-2" />
           </div>
           <Link href="/catalogo" className="text-[11px] font-bold tracking-[.15em] uppercase text-[#C1121F] border-b border-[#C1121F] pb-0.5 hover:opacity-75 transition-opacity">
@@ -412,13 +421,26 @@ export default function HomePage() {
         </div>
 
         {/* Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 relative">
-          {(filteredProducts.length > 0 ? filteredProducts : products).map(p => (
-            <div key={p.id} className="relative">
-              <ProductCard p={p} />
-            </div>
-          ))}
-        </div>
+        {loadingProducts ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {[...Array(4)].map((_, i) => (
+              <div key={i} className="h-80 bg-white border-[1.5px] border-[#f0f0f0] animate-pulse" />
+            ))}
+          </div>
+        ) : filteredProducts.length === 0 ? (
+          <div className="flex flex-col items-center justify-center py-16 text-center bg-white border border-[#f0f0f0]">
+            <PackageSearch size={40} className="text-gray-300 mb-3" />
+            <p className="text-gray-500 text-sm">No hay productos disponibles en esta categoría por ahora.</p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 relative">
+            {filteredProducts.slice(0, 8).map(p => (
+              <div key={p.id} className="relative">
+                <ProductCard p={p} />
+              </div>
+            ))}
+          </div>
+        )}
 
         {/* CTA */}
         <div className="text-center mt-12">

@@ -3,25 +3,16 @@ import { notFound } from "next/navigation";
 import AddToCartButton from "@/components/AddToCartButton";
 import Link from "next/link";
 import { MessageCircle, ArrowLeft } from "lucide-react";
+import { getProductBySlug } from "@/lib/api";
 
 interface PageProps {
     params: Promise<{ slug: string }>;
 }
 
-async function getProduct(slug: string) {
-    try {
-        const res = await fetch(`http://localhost:4000/api/products/${slug}`, { cache: 'no-store' });
-        if (!res.ok) return null;
-        return res.json();
-    } catch {
-        return null;
-    }
-}
-
 export default async function ProductPage({ params }: PageProps) {
     // RESOLVER LA PROMESA DE PARAMS (Requisito estricto de Next.js 15)
     const { slug } = await params;
-    const product = await getProduct(slug);
+    const product = await getProductBySlug(slug);
 
     if (!product) notFound();
 
