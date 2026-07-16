@@ -1,13 +1,20 @@
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import AddToCartButton from "@/components/AddToCartButton";
+import MobileBuyBar from "@/components/MobileBuyBar";
+import TrustBadges from "@/components/TrustBadges";
+import Reveal from "@/components/motion/Reveal";
+import TiltStage from "@/components/motion/TiltStage";
+import GlowOrbs from "@/components/motion/GlowOrbs";
 import Link from "next/link";
-import { MessageCircle, ArrowLeft } from "lucide-react";
+import { MessageCircle, ArrowLeft, ShieldCheck } from "lucide-react";
 import { getProductBySlug } from "@/lib/api";
 
 interface PageProps {
     params: Promise<{ slug: string }>;
 }
+
+const fmt = (n: number) => new Intl.NumberFormat('es-CO').format(n);
 
 export default async function ProductPage({ params }: PageProps) {
     // RESOLVER LA PROMESA DE PARAMS (Requisito estricto de Next.js 15)
@@ -18,60 +25,107 @@ export default async function ProductPage({ params }: PageProps) {
 
     const wspMessage = `Hola JNB Importaciones, estoy interesado en este producto: ${product.name} (Ref: ${product.id})`;
     const wspLink = `https://wa.me/573000000000?text=${encodeURIComponent(wspMessage)}`;
+    const lowStock = product.stock > 0 && product.stock <= 5;
 
     return (
-        <div className="max-w-7xl mx-auto px-4 py-12">
-            <Link href="/catalogo" className="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-[#C1121F] font-bold mb-8 transition-colors">
-                <ArrowLeft size={16} /> Volver al catálogo
-            </Link>
+        <div className="w-full bg-[#07070b] min-h-screen pb-24 lg:pb-0">
+            {/* ── HERO ─────────────────────────────────────────────── */}
+            <section className="relative overflow-hidden jnb-grid-bg border-b border-white/5">
+                <div className="absolute inset-0 jnb-radial-red" />
+                <GlowOrbs />
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-12 bg-white p-8 rounded-2xl border border-gray-200 shadow-sm">
-                <div className="flex flex-col gap-4">
-                    <div className="relative w-full h-[400px] bg-gray-50 rounded-xl overflow-hidden border p-4">
-                        <Image 
-                            src={`/productos/${product.images[0]}`} 
-                            alt={product.name} 
-                            fill 
-                            className="object-contain" 
-                            priority
-                        />
+                <div className="relative max-w-7xl mx-auto px-4 sm:px-6 py-8 lg:py-16">
+                    <Link href="/catalogo" className="inline-flex items-center gap-2 text-xs text-gray-400 hover:text-white font-bold mb-8 transition-colors uppercase tracking-widest">
+                        <ArrowLeft size={14} /> Volver al catálogo
+                    </Link>
+
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center">
+                        {/* Product stage */}
+                        <div className="relative order-1">
+                            <div className="absolute left-1/2 -translate-x-1/2 bottom-4 w-[70%] h-10 bg-[#C1121F]/30 blur-2xl rounded-full" />
+                            <TiltStage className="w-full aspect-square max-w-[440px] mx-auto">
+                                <div className="relative w-full h-full jnb-glass rounded-3xl p-10 [transform:translateZ(40px)]">
+                                    {product.images[0] && (
+                                        <Image
+                                            src={`/productos/${product.images[0]}`}
+                                            alt={product.name}
+                                            fill
+                                            className="object-contain p-6 drop-shadow-[0_25px_40px_rgba(0,0,0,0.6)]"
+                                            priority
+                                        />
+                                    )}
+                                </div>
+                            </TiltStage>
+                        </div>
+
+                        {/* Info */}
+                        <Reveal className="order-2" y={16}>
+                            <span className="inline-block text-[10px] font-extrabold text-[#ff2d42] bg-[#C1121F]/10 border border-[#C1121F]/30 px-3 py-1.5 rounded-full uppercase tracking-[.2em]">
+                                {product.category}
+                            </span>
+                            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black text-white mt-4 tracking-tight leading-[1.05]">
+                                {product.name}
+                            </h1>
+                            <p className="text-xs text-gray-500 mt-2 tracking-wide">
+                                Ref. {product.id} · {product.brand}
+                            </p>
+
+                            <div className="flex items-baseline gap-3 mt-6">
+                                <span className="text-4xl font-black text-white jnb-glow-text">${fmt(product.price)}</span>
+                                <span className="text-xs text-gray-500 font-semibold">COP</span>
+                            </div>
+
+                            <div className="mt-2">
+                                {product.stock <= 0 ? (
+                                    <span className="text-xs font-bold text-gray-500">Agotado momentáneamente</span>
+                                ) : lowStock ? (
+                                    <span className="text-xs font-bold text-orange-400">⚡ Quedan solo {product.stock} unidades</span>
+                                ) : (
+                                    <span className="text-xs font-bold text-emerald-400">✓ Disponible para envío inmediato</span>
+                                )}
+                            </div>
+
+                            <p className="text-gray-400 text-sm mt-5 leading-relaxed max-w-lg">
+                                {product.description}
+                            </p>
+
+                            <div className="mt-7 hidden lg:block">
+                                <AddToCartButton product={product} />
+                            </div>
+
+                            <Link
+                                href={wspLink}
+                                target="_blank"
+                                className="hidden lg:flex mt-3 w-full items-center justify-center gap-2 border border-[#25D366]/40 text-[#25D366] font-bold py-3 rounded-lg transition-colors hover:bg-[#25D366]/10 text-sm"
+                            >
+                                <MessageCircle size={18} />
+                                Asesoría directa por WhatsApp
+                            </Link>
+
+                            <TrustBadges className="mt-8" />
+                        </Reveal>
                     </div>
                 </div>
+            </section>
 
-                <div className="flex flex-col justify-between">
-                    <div>
-                        <span className="text-xs font-extrabold text-[#C1121F] bg-[#EDF2F4] px-2.5 py-1 rounded-md uppercase tracking-wider">{product.category}</span>
-                        <h1 className="text-3xl font-black text-[#2B2D42] mt-3 tracking-tight">{product.name}</h1>
-                        <p className="text-xs text-gray-400 mt-1">Referencia única: {product.id} | Fabricante: {product.brand}</p>
-                        
-                        <div className="text-3xl font-black text-[#2B2D42] my-6">
-                            ${product.price.toLocaleString('es-CO')} <span className="text-xs text-gray-400 font-normal">COP</span>
-                        </div>
+            {/* ── DETAILS ──────────────────────────────────────────── */}
+            <section className="max-w-7xl mx-auto px-4 sm:px-6 py-16 grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <Reveal className="lg:col-span-2 jnb-glass rounded-2xl p-6 sm:p-8" delay={0.05}>
+                    <h2 className="text-xs uppercase font-extrabold text-white tracking-[.2em] mb-4">Descripción general</h2>
+                    <p className="text-gray-400 text-sm leading-relaxed">{product.description}</p>
+                </Reveal>
 
-                        <div className="border-t border-b py-4 my-4">
-                            <h3 className="text-xs uppercase font-extrabold text-[#2B2D42] tracking-wider mb-2">Descripción General:</h3>
-                            <p className="text-gray-600 text-sm leading-relaxed">{product.description}</p>
-                        </div>
-
-                        <div className="bg-[#EDF2F4] p-4 rounded-xl border border-gray-200">
-                            <h3 className="text-xs uppercase font-extrabold text-[#2B2D42] tracking-wider mb-1">Compatibilidad Garantizada:</h3>
-                            <p className="text-sm text-[#2B2D42] font-semibold">{product.compatibility}</p>
-                        </div>
+                <Reveal className="jnb-glass rounded-2xl p-6 sm:p-8" delay={0.1}>
+                    <div className="flex items-center gap-2 mb-3">
+                        <ShieldCheck size={18} className="text-[#ff2d42]" />
+                        <h2 className="text-xs uppercase font-extrabold text-white tracking-[.2em]">Compatibilidad</h2>
                     </div>
+                    <p className="text-sm text-gray-300 font-semibold leading-relaxed">{product.compatibility}</p>
+                </Reveal>
+            </section>
 
-                    <div className="flex flex-col sm:flex-row gap-4 mt-8">
-                        <AddToCartButton product={product} />
-                        <Link 
-                            href={wspLink} 
-                            target="_blank" 
-                            className="flex-1 bg-[#25D366] hover:bg-[#20ba59] text-white font-bold py-4 px-6 rounded-lg transition-colors flex items-center justify-center gap-2 shadow-md"
-                        >
-                            <MessageCircle size={20} />
-                            Asesoría Directa
-                        </Link>
-                    </div>
-                </div>
-            </div>
+            {/* ── MOBILE STICKY BUY BAR ───────────────────────────── */}
+            <MobileBuyBar product={product} />
         </div>
     );
 }

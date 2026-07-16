@@ -1,6 +1,6 @@
 import { countProducts, upsertProduct, UpsertProductInput } from './services/productService';
 
-const sampleCatalog: UpsertProductInput[] = [
+export const sampleCatalog: UpsertProductInput[] = [
     {
         id: 'REF001',
         slug: 'radio-android-9-mazda-3',
@@ -12,7 +12,7 @@ const sampleCatalog: UpsertProductInput[] = [
         price: 1250000,
         stock: 12,
         status: 'Activo',
-        images: ['radio-android-9-mazda-3.svg'],
+        images: ['radio-android-9-mazda-3.jpg'],
     },
     {
         id: 'REF002',
@@ -25,7 +25,7 @@ const sampleCatalog: UpsertProductInput[] = [
         price: 249000,
         stock: 30,
         status: 'Activo',
-        images: ['tapetes-termoformados-a-medida.svg'],
+        images: ['tapetes-termoformados-a-medida.jpg'],
     },
     {
         id: 'REF003',
@@ -38,7 +38,7 @@ const sampleCatalog: UpsertProductInput[] = [
         price: 450000,
         stock: 18,
         status: 'Activo',
-        images: ['caja-turbo-subwoofer.svg'],
+        images: ['caja-turbo-subwoofer.jpg'],
     },
     {
         id: 'REF004',
@@ -51,7 +51,7 @@ const sampleCatalog: UpsertProductInput[] = [
         price: 180000,
         stock: 40,
         status: 'Activo',
-        images: ['bombillos-led-k1-pro.svg'],
+        images: ['bombillos-led-k1-pro.jpg'],
     },
     {
         id: 'REF005',
@@ -64,7 +64,7 @@ const sampleCatalog: UpsertProductInput[] = [
         price: 120000,
         stock: 25,
         status: 'Activo',
-        images: ['camara-reversa-hd.svg'],
+        images: ['camara-reversa-hd.jpg'],
     },
     {
         id: 'REF006',
@@ -77,7 +77,7 @@ const sampleCatalog: UpsertProductInput[] = [
         price: 380000,
         stock: 15,
         status: 'Activo',
-        images: ['amplificador-4-canales-1000w.svg'],
+        images: ['amplificador-4-canales-1000w.jpg'],
     },
     {
         id: 'REF007',
@@ -90,7 +90,7 @@ const sampleCatalog: UpsertProductInput[] = [
         price: 890000,
         stock: 10,
         status: 'Activo',
-        images: ['radio-universal-7-android-12.svg'],
+        images: ['radio-universal-7-android-12.jpg'],
     },
     {
         id: 'REF008',
@@ -103,7 +103,7 @@ const sampleCatalog: UpsertProductInput[] = [
         price: 220000,
         stock: 20,
         status: 'Activo',
-        images: ['alarma-sensor-presencia.svg'],
+        images: ['alarma-sensor-presencia.jpg'],
     },
 ];
 

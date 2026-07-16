@@ -1,8 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="600" height="600" viewBox="0 0 600 600">
-  <rect width="600" height="600" fill="#EDF2F4"/>
-  <rect x="0" y="0" width="600" height="600" fill="none" stroke="#e5e5e5" stroke-width="2"/>
-  <circle cx="300" cy="250" r="120" fill="#2B2D42" opacity="0.06"/>
-  <text x="300" y="270" font-family="Arial, sans-serif" font-size="22" font-weight="900" fill="#C1121F" text-anchor="middle" letter-spacing="3">AUDIO</text>
-  <text x="300" y="320" font-family="Arial, sans-serif" font-size="32" font-weight="900" fill="#2B2D42" text-anchor="middle">JNB IMPO</text>
-  <text x="300" y="420" font-family="Arial, sans-serif" font-size="20" font-weight="700" fill="#555" text-anchor="middle">Caja Turbo Subwoofer</text>
-</svg>
