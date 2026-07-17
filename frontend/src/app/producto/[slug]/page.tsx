@@ -1,20 +1,53 @@
 import Image from "next/image";
 import { notFound } from "next/navigation";
+import type { Metadata } from "next";
 import AddToCartButton from "@/components/AddToCartButton";
 import MobileBuyBar from "@/components/MobileBuyBar";
 import TrustBadges from "@/components/TrustBadges";
 import Reveal from "@/components/motion/Reveal";
 import TiltStage from "@/components/motion/TiltStage";
-import GlowOrbs from "@/components/motion/GlowOrbs";
+import SpecChip from "@/components/motion/SpecChip";
+import ScrollStory from "@/components/motion/ScrollStory";
 import Link from "next/link";
-import { MessageCircle, ArrowLeft, ShieldCheck } from "lucide-react";
+import { MessageCircle, ArrowLeft, ShieldCheck, Tag, Award } from "lucide-react";
 import { getProductBySlug } from "@/lib/api";
+import { productStories } from "@/lib/productStories";
 
 interface PageProps {
     params: Promise<{ slug: string }>;
 }
 
 const fmt = (n: number) => new Intl.NumberFormat('es-CO').format(n);
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://jnbimportaciones.com';
+
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+    const { slug } = await params;
+    const product = await getProductBySlug(slug);
+    if (!product) return { title: 'Producto no encontrado | JNB Importaciones' };
+
+    const title = `${product.name} | JNB Importaciones`;
+    const description = product.description.slice(0, 155);
+    const imageUrl = product.images[0] ? `${SITE_URL}/productos/${product.images[0]}` : undefined;
+
+    return {
+        title,
+        description,
+        alternates: { canonical: `${SITE_URL}/producto/${product.slug}` },
+        openGraph: {
+            title,
+            description,
+            url: `${SITE_URL}/producto/${product.slug}`,
+            type: 'website',
+            images: imageUrl ? [{ url: imageUrl, width: 1024, height: 1024, alt: product.name }] : undefined,
+        },
+        twitter: {
+            card: 'summary_large_image',
+            title,
+            description,
+            images: imageUrl ? [imageUrl] : undefined,
+        },
+    };
+}
 
 export default async function ProductPage({ params }: PageProps) {
     // RESOLVER LA PROMESA DE PARAMS (Requisito estricto de Next.js 15)
@@ -26,14 +59,34 @@ export default async function ProductPage({ params }: PageProps) {
     const wspMessage = `Hola JNB Importaciones, estoy interesado en este producto: ${product.name} (Ref: ${product.id})`;
     const wspLink = `https://wa.me/573000000000?text=${encodeURIComponent(wspMessage)}`;
     const lowStock = product.stock > 0 && product.stock <= 5;
+    const story = productStories[product.slug];
+
+    const jsonLd = {
+        '@context': 'https://schema.org',
+        '@type': 'Product',
+        name: product.name,
+        description: product.description,
+        sku: product.id,
+        brand: { '@type': 'Brand', name: product.brand },
+        category: product.category,
+        image: product.images[0] ? [`${SITE_URL}/productos/${product.images[0]}`] : undefined,
+        offers: {
+            '@type': 'Offer',
+            url: `${SITE_URL}/producto/${product.slug}`,
+            priceCurrency: 'COP',
+            price: product.price,
+            availability: product.stock > 0 ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock',
+        },
+    };
 
     return (
         <div className="w-full bg-[#07070b] min-h-screen pb-24 lg:pb-0">
+            <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
             {/* ── HERO ─────────────────────────────────────────────── */}
-            <section className="relative overflow-hidden jnb-grid-bg border-b border-white/5">
-                <div className="absolute inset-0 jnb-radial-red" />
-                <GlowOrbs />
-
+            <section
+                className="relative overflow-hidden border-b border-white/5 jnb-photo-hero"
+                style={{ backgroundImage: "url(/fondos/carbon-fiber.jpg)" }}
+            >
                 <div className="relative max-w-7xl mx-auto px-4 sm:px-6 py-8 lg:py-16">
                     <Link href="/catalogo" className="inline-flex items-center gap-2 text-xs text-gray-400 hover:text-white font-bold mb-8 transition-colors uppercase tracking-widest">
                         <ArrowLeft size={14} /> Volver al catálogo
@@ -56,6 +109,17 @@ export default async function ProductPage({ params }: PageProps) {
                                     )}
                                 </div>
                             </TiltStage>
+
+                            {/* Floating spec chips */}
+                            <div className="hidden sm:block absolute -left-6 top-6 z-10">
+                                <SpecChip icon={<Tag size={14} />} label="Categoría" value={product.category} delay={0.2} />
+                            </div>
+                            <div className="hidden sm:block absolute -right-4 top-1/3 z-10">
+                                <SpecChip icon={<Award size={14} />} label="Línea" value={product.brand} delay={0.6} />
+                            </div>
+                            <div className="hidden sm:block absolute left-2 bottom-2 z-10">
+                                <SpecChip icon={<ShieldCheck size={14} />} label="Garantía" value="Incluida" delay={1} />
+                            </div>
                         </div>
 
                         {/* Info */}
@@ -63,7 +127,8 @@ export default async function ProductPage({ params }: PageProps) {
                             <span className="inline-block text-[10px] font-extrabold text-[#ff2d42] bg-[#C1121F]/10 border border-[#C1121F]/30 px-3 py-1.5 rounded-full uppercase tracking-[.2em]">
                                 {product.category}
                             </span>
-                            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black text-white mt-4 tracking-tight leading-[1.05]">
+                            <p className="jnb-accent text-2xl text-gray-300 mt-4">Instalado hoy, sentido cada kilómetro.</p>
+                            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black text-white mt-2 tracking-tight leading-[1.05]">
                                 {product.name}
                             </h1>
                             <p className="text-xs text-gray-500 mt-2 tracking-wide">
@@ -107,6 +172,11 @@ export default async function ProductPage({ params }: PageProps) {
                     </div>
                 </div>
             </section>
+
+            {/* ── SCROLL STORY ─────────────────────────────────────── */}
+            {story && product.images[0] && (
+                <ScrollStory image={product.images[0]} alt={product.name} callouts={story} />
+            )}
 
             {/* ── DETAILS ──────────────────────────────────────────── */}
             <section className="max-w-7xl mx-auto px-4 sm:px-6 py-16 grid grid-cols-1 lg:grid-cols-3 gap-6">

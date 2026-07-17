@@ -1,10 +1,17 @@
 import Link from 'next/link';
 import Image from 'next/image';
+import type { Metadata } from 'next';
 import { PackageSearch } from 'lucide-react';
 import { getAllProducts, Product } from '@/lib/api';
 import { StaggerGroup, StaggerItem } from '@/components/motion/StaggerGroup';
 
 const fmt = (n: number) => new Intl.NumberFormat('es-CO').format(n);
+
+export const metadata: Metadata = {
+    title: 'Catálogo de Productos | JNB Importaciones',
+    description: 'Radios Android, car audio, iluminación LED y accesorios de interior para tu vehículo. Piezas originales y de alto desempeño con envío a toda Colombia.',
+    alternates: { canonical: '/catalogo' },
+};
 
 export default async function CatalogPage() {
     const products = await getAllProducts();

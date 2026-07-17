@@ -13,19 +13,17 @@ const navCategories = [
             { label: 'Car Audio', href: '/catalogo?cat=audio' },
             { label: 'Iluminación LED', href: '/catalogo?cat=led' },
             { label: 'Interior', href: '/catalogo?cat=interior' },
-            { label: 'Cámaras', href: '/catalogo?cat=camaras' },
-            { label: 'Alarmas', href: '/catalogo?cat=alarmas' },
         ],
     },
 ];
 
 const suggestions = [
-    'Radio Android Mazda 3',
-    'Bombillos LED K1 PRO',
-    'Subwoofer Caja Turbo',
-    'Tapetes Termoformados',
-    'Cámara de Reversa HD',
-    'Amplificador 4 Canales',
+    'Radio Android Toyota 4Runner',
+    'Tweeter JNB PRO',
+    'Tercer Stop LED Fortuner',
+    'Timón Lexus Carbono',
+    'Timón Corolla Cross GR',
+    'Timón Palo Rosa Toyota',
 ];
 
 export default function Navbar() {

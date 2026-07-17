@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { ChevronLeft, ChevronRight, ShoppingBag, PackageSearch } from 'lucide-react';
+import { ChevronLeft, ChevronRight, ShoppingBag, PackageSearch, Sparkles, Truck } from 'lucide-react';
 import { getAllProducts, Product } from '@/lib/api';
 import { useCartStore } from '@/store/useCartStore';
 import { useToastStore } from '@/store/useToastStore';
@@ -11,53 +11,61 @@ import Reveal from '@/components/motion/Reveal';
 import { StaggerGroup, StaggerItem } from '@/components/motion/StaggerGroup';
 import TiltStage from '@/components/motion/TiltStage';
 import GlowOrbs from '@/components/motion/GlowOrbs';
+import SpecChip from '@/components/motion/SpecChip';
+import ParallaxHero from '@/components/motion/ParallaxHero';
+import LazyAmbientBg from '@/components/three/LazyAmbientBg';
+import LazyProductCarousel3D from '@/components/three/LazyProductCarousel3D';
 
 // ─── DATA ────────────────────────────────────────────────────────────────────
 
 const heroSlides = [
   {
-    tag: '🔥 Oferta de la Semana',
-    title: 'Radio Android\n9" Mazda 3',
-    sub: 'Pantalla táctil Full HD · GPS · Bluetooth 5.0 · WiFi integrado. Instalación profesional incluida.',
-    price: 1250000,
-    oldPrice: 1500000,
-    discount: 15,
-    image: 'radio-android-9-mazda-3.jpg',
-    slug: 'radio-android-9-mazda-3',
-    watermark: 'RADIO',
+    tag: '🏁 Edición Premium',
+    mood: 'Control absoluto, en tus manos.',
+    title: 'Timón Lexus\nFibra de Carbono',
+    sub: 'Inserciones en fibra de carbono real, cuero premium y controles multifunción. Acabado línea F.',
+    price: 1780000,
+    oldPrice: null,
+    discount: 0,
+    image: 'timon-lexus-carbono.png',
+    slug: 'timon-lexus-carbono',
+    watermark: 'CARBON',
+  },
+  {
+    tag: '🔥 Más Vendido',
+    mood: 'Tu tablero, del futuro.',
+    title: 'Radio Android\nToyota 4Runner',
+    sub: 'Pantalla vertical estilo Tesla, 4GB/64GB, CarPlay y Android Auto inalámbricos. Control climático integrado.',
+    price: 2350000,
+    oldPrice: null,
+    discount: 0,
+    image: 'radio-toyota-4runner-2017.webp',
+    slug: 'radio-toyota-4runner-2017',
+    watermark: 'ANDROID',
   },
   {
     tag: '⚡ Nuevo Ingreso',
-    title: 'Bombillos\nLED K1 PRO',
-    sub: 'Tecnología JNB-IHK de última generación. 3× más luminosidad que el halógeno. Plug & play.',
-    price: 180000,
-    oldPrice: 220000,
-    discount: 18,
-    image: 'bombillos-led-k1-pro.jpg',
-    slug: 'bombillos-led-k1-pro',
-    watermark: 'LED',
-  },
-  {
-    tag: '🔊 Car Audio Premium',
-    title: 'Subwoofer\nCaja Turbo',
-    sub: 'Graves profundos y precisos. Diseño compacto de alto rendimiento para todo tipo de vehículo.',
-    price: 450000,
-    oldPrice: 520000,
-    discount: 13,
-    image: 'caja-turbo-subwoofer.jpg',
-    slug: 'caja-turbo-subwoofer',
-    watermark: 'BASS',
-  },
-  {
-    tag: '🎯 Personalización Interior',
-    title: 'Tapetes\na tu Medida',
-    sub: 'Termoformados con tecnología de precisión. Ajuste perfecto, materiales premium resistentes al agua.',
-    price: 249000,
-    oldPrice: 300000,
+    mood: 'Agudos que se sienten cristalinos.',
+    title: 'Tweeter\nJNB PRO',
+    sub: 'Cúpula reforzada para agudos sin distorsión. Cuerpo en aluminio mecanizado, acabado premium.',
+    price: 95000,
+    oldPrice: 115000,
     discount: 17,
-    image: 'tapetes-termoformados-a-medida.jpg',
-    slug: 'tapetes-termoformados-a-medida',
-    watermark: 'MAT',
+    image: 'tweeter-jnb-3.png',
+    slug: 'tweeter-jnb-3',
+    watermark: 'AUDIO',
+  },
+  {
+    tag: '🎯 Estilo Clásico',
+    mood: 'Elegancia que se siente al conducir.',
+    title: 'Timón Palo Rosa\nToyota',
+    sub: 'Acabado en palo rosa y cuero negro, controles multifunción integrados. Elegancia clásica para tu interior.',
+    price: 1120000,
+    oldPrice: null,
+    discount: 0,
+    image: 'timon-palo-rosa-toyota.png',
+    slug: 'timon-palo-rosa-toyota',
+    watermark: 'PREMIUM',
   },
 ];
 
@@ -70,9 +78,9 @@ const tickerItems = [
   '🎯 Tapetes Termoformados a Medida',
 ];
 
-const brands = ['Pioneer', 'JVC', 'Sony', 'Kenwood', 'Alpine', 'Focal', 'Hertz', 'Rockford', 'JBL', 'Clarion'];
+const brands = ['Toyota', 'Lexus', 'Mazda', 'Nissan', 'Honda', 'Chevrolet', 'Ford', 'Kia', 'Hyundai', 'Renault'];
 
-const categories = ['Todos', 'Radios Android', 'Car Audio', 'Iluminación LED', 'Interior', 'Cámaras', 'Alarmas', 'Accesorios'];
+const categories = ['Todos', 'Radios Android', 'Car Audio', 'Iluminación LED', 'Interior'];
 
 const stats = [
   { target: 1200, suffix: '+', label: 'Instalaciones Realizadas' },
@@ -131,15 +139,11 @@ function HeroCarousel() {
 
   return (
     <section
-      className="relative w-full min-h-[560px] py-14 md:py-0 md:h-[640px] overflow-hidden jnb-grid-bg border-b border-white/5"
+      className="relative w-full min-h-[560px] py-14 md:py-0 md:h-[640px] border-b border-white/5"
       onMouseEnter={pauseAuto}
       onMouseLeave={resumeAuto}
     >
-      {/* Backgrounds */}
-      <div className="absolute inset-0 bg-gradient-to-b from-[#07070b] via-[#0b0508] to-[#07070b]" />
-      <div className="absolute inset-0 jnb-radial-red" />
-      <GlowOrbs />
-
+    <ParallaxHero backgroundImage="/fondos/garage-moody.jpg" className="w-full h-full min-h-[560px] md:min-h-[640px]">
       {/* Watermark */}
       <div className="absolute right-0 top-0 h-full flex items-center justify-center w-1/2 pointer-events-none select-none">
         <span className="text-[200px] font-black text-white/[0.04] leading-none tracking-tighter uppercase">
@@ -156,7 +160,9 @@ function HeroCarousel() {
               {slide.tag}
             </span>
 
-            <h1 className="text-[clamp(40px,6vw,72px)] font-black text-white leading-[.93] uppercase tracking-tighter whitespace-pre-line">
+            <p className="jnb-accent text-2xl sm:text-3xl text-gray-200 mb-1">{slide.mood}</p>
+
+            <h1 className="text-[clamp(36px,5.5vw,64px)] font-black text-white leading-[.93] uppercase tracking-tighter whitespace-pre-line">
               {slide.title}
             </h1>
 
@@ -166,10 +172,14 @@ function HeroCarousel() {
 
             <div className="flex items-baseline gap-3 mt-5">
               <span className="text-3xl font-black text-white jnb-glow-text">${fmt(slide.price)}</span>
-              <span className="text-base text-[#666] line-through">${fmt(slide.oldPrice)}</span>
-              <span className="bg-[#C1121F] text-white text-[11px] font-extrabold px-2.5 py-1">
-                -{slide.discount}%
-              </span>
+              {slide.oldPrice && (
+                <span className="text-base text-[#666] line-through">${fmt(slide.oldPrice)}</span>
+              )}
+              {slide.discount > 0 && (
+                <span className="bg-[#C1121F] text-white text-[11px] font-extrabold px-2.5 py-1">
+                  -{slide.discount}%
+                </span>
+              )}
             </div>
 
             <div className="flex gap-3 mt-7">
@@ -190,15 +200,23 @@ function HeroCarousel() {
 
           {/* Floating product visual */}
           <div className="hidden lg:block relative">
+            <div className="absolute left-1/2 -translate-x-1/2 bottom-2 w-[55%] h-6 bg-black/70 blur-xl rounded-full" />
             <div className="absolute left-1/2 -translate-x-1/2 bottom-6 w-[65%] h-10 bg-[#C1121F]/30 blur-2xl rounded-full" />
-            <TiltStage key={slide.slug} className="w-full aspect-square max-w-[380px] mx-auto" strength={8}>
+            <TiltStage key={slide.slug} className="w-full aspect-square max-w-[380px] mx-auto" strength={12}>
               <div className="relative w-full h-full jnb-glass rounded-3xl p-8 [transform:translateZ(30px)]">
                 <Image src={`/productos/${slide.image}`} alt={slide.title} fill className="object-contain p-6 drop-shadow-[0_25px_40px_rgba(0,0,0,0.6)]" priority />
               </div>
             </TiltStage>
+            <div className="absolute -left-8 top-4 z-10">
+              <SpecChip icon={<Sparkles size={14} />} label={slide.discount > 0 ? 'Oferta' : 'Destacado'} value={slide.discount > 0 ? `-${slide.discount}% hoy` : 'Pieza original'} delay={0.2} />
+            </div>
+            <div className="absolute -right-6 bottom-10 z-10">
+              <SpecChip icon={<Truck size={14} />} label="Entrega" value="Envío nacional" delay={0.7} />
+            </div>
           </div>
         </div>
       </div>
+    </ParallaxHero>
 
       {/* Arrow controls (desktop only — on mobile the stacked content runs the full height, so side arrows would overlap the text) */}
       <button
@@ -426,6 +444,26 @@ export default function HomePage() {
         </Reveal>
       </div>
 
+      {/* ── 3D COLLECTION CAROUSEL ──────────────────────────────── */}
+      {!loadingProducts && products.length > 0 && (
+        <section className="relative py-16 border-y border-white/5 overflow-hidden">
+          <div className="max-w-[1400px] mx-auto px-6 md:px-8">
+            <Reveal>
+              <div className="text-center mb-2">
+                <p className="jnb-accent text-2xl text-gray-300">Nuestra Colección</p>
+                <h2 className="text-2xl font-black text-white uppercase tracking-widest mt-1">Explora en 3D</h2>
+                <p className="text-gray-500 text-xs mt-2">Arrastra para girar · Toca un producto para verlo</p>
+              </div>
+            </Reveal>
+            <div className="h-[420px] sm:h-[520px] mt-4">
+              <LazyProductCarousel3D
+                products={products.map(p => ({ slug: p.slug, name: p.name, image: p.images[0] || '' }))}
+              />
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* ── PRODUCTS GRID ──────────────────────────────────────── */}
       <section className="max-w-[1400px] mx-auto px-6 md:px-8 py-14">
         {/* Header */}
@@ -487,7 +525,7 @@ export default function HomePage() {
 
       {/* ── STATS BAR ──────────────────────────────────────────── */}
       <div className="relative bg-[#0b0508] py-14 px-6 overflow-hidden">
-        <div className="absolute inset-0 jnb-radial-red opacity-60" />
+        <LazyAmbientBg className="opacity-70" />
         <div className="relative max-w-[900px] mx-auto grid grid-cols-2 md:grid-cols-4 gap-10">
           {stats.map(s => (
             <StatItem key={s.label} {...s} />

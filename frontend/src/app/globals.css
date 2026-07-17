@@ -58,3 +58,23 @@ body {
 
 .jnb-scrollbar-none::-webkit-scrollbar { display: none; }
 .jnb-scrollbar-none { scrollbar-width: none; }
+
+.jnb-accent {
+  font-family: var(--font-serif-accent), Georgia, serif;
+  font-style: italic;
+  font-weight: 400;
+}
+
+/* Full-bleed cinematic photo background with a dark gradient so text stays legible */
+.jnb-photo-hero {
+  background-size: cover;
+  background-position: center;
+}
+.jnb-photo-hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(to bottom, rgba(5,5,8,0.55) 0%, rgba(5,5,8,0.75) 55%, rgba(5,5,8,0.96) 100%),
+    linear-gradient(to right, rgba(5,5,8,0.9) 0%, rgba(5,5,8,0.2) 45%, rgba(5,5,8,0.55) 100%);
+}
