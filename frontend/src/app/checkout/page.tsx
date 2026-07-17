@@ -6,7 +6,8 @@ import { useCartStore } from '@/store/useCartStore';
 import { useCartHydrated } from '@/store/useCartHydrated';
 import { useToastStore } from '@/store/useToastStore';
 import { createOrder, ApiError } from '@/lib/api';
-import { ArrowLeft, Truck, MessageCircle, Lock } from 'lucide-react';
+import { useGarageStore, formatVehicle } from '@/store/useGarageStore';
+import { ArrowLeft, Truck, MessageCircle, Lock, Car } from 'lucide-react';
 
 const fmt = (n: number) => new Intl.NumberFormat('es-CO').format(n);
 
@@ -16,6 +17,7 @@ interface FormState {
     customerEmail: string;
     address: string;
     city: string;
+    vehicle: string;
     notes: string;
     paymentMethod: 'contraentrega' | 'whatsapp';
 }
@@ -26,6 +28,7 @@ const initialForm: FormState = {
     customerEmail: '',
     address: '',
     city: '',
+    vehicle: '',
     notes: '',
     paymentMethod: 'contraentrega',
 };
@@ -37,6 +40,7 @@ function validate(form: FormState): Partial<Record<keyof FormState, string>> {
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.customerEmail.trim())) errors.customerEmail = 'Ingresa un email válido.';
     if (form.address.trim().length < 5) errors.address = 'Ingresa una dirección completa.';
     if (form.city.trim().length < 2) errors.city = 'Ingresa tu ciudad.';
+    if (form.vehicle.trim().length < 3) errors.vehicle = 'Indica marca, modelo y año de tu vehículo.';
     return errors;
 }
 
@@ -50,10 +54,18 @@ export default function CheckoutPage() {
     const [submitting, setSubmitting] = useState(false);
     const [orderPlaced, setOrderPlaced] = useState(false);
     const hydrated = useCartHydrated();
+    const garageVehicle = useGarageStore((s) => s.vehicle);
 
     useEffect(() => {
         if (hydrated && !orderPlaced && items.length === 0) router.replace('/carrito');
     }, [hydrated, orderPlaced, items.length, router]);
+
+    // Prefill from "Mi Garaje" if the customer already saved a vehicle, without overwriting anything they've typed.
+    useEffect(() => {
+        if (garageVehicle) {
+            setForm((f) => (f.vehicle ? f : { ...f, vehicle: formatVehicle(garageVehicle) }));
+        }
+    }, [garageVehicle]);
 
     if (!hydrated || (items.length === 0 && !orderPlaced)) return null;
 
@@ -160,6 +172,19 @@ export default function CheckoutPage() {
                                         placeholder="Bogotá"
                                     />
                                     {errors.city && <p className="text-xs text-[#ff2d42] mt-1">{errors.city}</p>}
+                                </div>
+                                <div className="sm:col-span-2">
+                                    <label className="text-xs font-bold text-gray-500 uppercase tracking-wide flex items-center gap-1.5">
+                                        <Car size={13} className="text-[#ff2d42]" /> Vehículo (marca, modelo y año)
+                                    </label>
+                                    <input
+                                        value={form.vehicle}
+                                        onChange={(e) => handleChange('vehicle', e.target.value)}
+                                        className={inputClass('vehicle')}
+                                        placeholder="Toyota Fortuner 2018"
+                                    />
+                                    {errors.vehicle && <p className="text-xs text-[#ff2d42] mt-1">{errors.vehicle}</p>}
+                                    <p className="text-[11px] text-gray-600 mt-1">Nos ayuda a confirmar que la pieza es 100% compatible antes de despachar.</p>
                                 </div>
                                 <div className="sm:col-span-2">
                                     <label className="text-xs font-bold text-gray-500 uppercase tracking-wide">Notas adicionales (opcional)</label>

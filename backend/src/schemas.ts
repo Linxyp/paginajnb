@@ -11,6 +11,7 @@ export const createOrderSchema = z.object({
     customerEmail: z.string().trim().email('Email inválido').max(160),
     address: z.string().trim().min(5, 'La dirección es muy corta').max(200),
     city: z.string().trim().min(2).max(80),
+    vehicle: z.string().trim().min(3, 'Indica marca, modelo y año de tu vehículo').max(120),
     notes: z.string().trim().max(500).optional().default(''),
     paymentMethod: z.enum(['contraentrega', 'whatsapp']),
     items: z.array(orderItemSchema).min(1, 'El pedido no contiene productos').max(50),

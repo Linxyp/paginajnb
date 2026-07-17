@@ -18,6 +18,8 @@ export interface Product {
     stock: number;
     status: string;
     images: string[];
+    vehicleBrand: string;
+    vehicleModel: string;
 }
 
 export async function getAllProducts(): Promise<Product[]> {
@@ -51,6 +53,7 @@ export interface CreateOrderInput {
     customerEmail: string;
     address: string;
     city: string;
+    vehicle: string;
     notes: string;
     paymentMethod: 'contraentrega' | 'whatsapp';
     items: OrderItemInput[];
@@ -101,6 +104,7 @@ export interface OrderRecord {
     customerEmail: string;
     address: string;
     city: string;
+    vehicle: string;
     notes: string;
     paymentMethod: string;
     status: string;

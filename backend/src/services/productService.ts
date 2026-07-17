@@ -12,6 +12,8 @@ export interface Product {
     stock: number;
     status: string;
     images: string[];
+    vehicleBrand: string;
+    vehicleModel: string;
 }
 
 interface ProductRow {
@@ -26,6 +28,8 @@ interface ProductRow {
     stock: number;
     status: string;
     images: string;
+    vehicleBrand: string;
+    vehicleModel: string;
 }
 
 const rowToProduct = (row: ProductRow): Product => ({
@@ -60,12 +64,14 @@ export interface UpsertProductInput {
     stock: number;
     status: string;
     images: string[];
+    vehicleBrand: string;
+    vehicleModel: string;
 }
 
 export const upsertProduct = (p: UpsertProductInput): void => {
     db.prepare(`
-        INSERT INTO products (id, slug, name, category, brand, compatibility, description, price, stock, status, images)
-        VALUES (@id, @slug, @name, @category, @brand, @compatibility, @description, @price, @stock, @status, @images)
+        INSERT INTO products (id, slug, name, category, brand, compatibility, description, price, stock, status, images, vehicleBrand, vehicleModel)
+        VALUES (@id, @slug, @name, @category, @brand, @compatibility, @description, @price, @stock, @status, @images, @vehicleBrand, @vehicleModel)
         ON CONFLICT(id) DO UPDATE SET
             slug = excluded.slug,
             name = excluded.name,
@@ -76,7 +82,9 @@ export const upsertProduct = (p: UpsertProductInput): void => {
             price = excluded.price,
             stock = excluded.stock,
             status = excluded.status,
-            images = excluded.images
+            images = excluded.images,
+            vehicleBrand = excluded.vehicleBrand,
+            vehicleModel = excluded.vehicleModel
     `).run({ ...p, images: JSON.stringify(p.images) });
 };
 

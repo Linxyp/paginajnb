@@ -13,14 +13,17 @@ export const productStories: Record<string, Callout[]> = {
         { x: 55, y: 78, title: 'Terminales plug & play', text: 'Compatible con la mayoría de crossovers del mercado.', side: 'right' },
     ],
     'radio-toyota-4runner-2017': [
-        { x: 50, y: 30, title: 'Pantalla vertical Android', text: 'Estilo Tesla, con Apple CarPlay y Android Auto inalámbricos.', side: 'right' },
-        { x: 50, y: 48, title: '4GB RAM / 64GB', text: 'Suficiente potencia para navegación, música y apps sin trabarse.', side: 'left' },
-        { x: 50, y: 70, title: 'Clima integrado', text: 'Controla la temperatura sin salir de la pantalla principal.', side: 'right' },
+        { x: 50, y: 18, title: 'Pantalla vertical Android', text: 'Estilo Tesla, alta definición táctil, integrada en el marco original.', side: 'right' },
+        { x: 62, y: 27, title: 'Bluetooth y llamadas', text: 'Contesta llamadas y reproduce música sin usar el celular.', side: 'left' },
+        { x: 38, y: 34, title: 'Apple CarPlay / Android Auto', text: 'Conecta tu iPhone o Android de forma inalámbrica, sin cables.', side: 'right' },
+        { x: 65, y: 45, title: 'GPS integrado', text: 'Navegación sin depender de datos móviles del celular.', side: 'left' },
+        { x: 20, y: 20, title: 'Control climático táctil', text: 'Ajusta la temperatura del aire sin salir de la pantalla.', side: 'right' },
+        { x: 50, y: 76, title: '4GB RAM / 64GB', text: 'Suficiente potencia para navegación, música y apps sin trabarse.', side: 'left' },
     ],
     'tercer-stop-led-fortuner': [
-        { x: 30, y: 60, title: 'Barra LED secuencial', text: 'Encendido progresivo estilo OEM: mayor visibilidad al frenar.', side: 'left' },
-        { x: 75, y: 22, title: 'Ajuste exacto de fábrica', text: 'Diseñada a la medida del Fortuner 2016-2020.', side: 'right' },
-        { x: 78, y: 62, title: 'Instalación plug & play', text: 'Sin modificar el cableado original del vehículo.', side: 'right' },
+        { x: 45, y: 45, title: 'Barra LED secuencial', text: 'Encendido progresivo estilo OEM: mayor visibilidad al frenar.', side: 'right' },
+        { x: 25, y: 30, title: 'Diseño estilo OEM', text: 'Se ve como una pieza de fábrica, no como un accesorio agregado.', side: 'left' },
+        { x: 68, y: 58, title: 'Instalación plug & play', text: 'Sin modificar el cableado original del vehículo.', side: 'right' },
     ],
     'timon-corolla-cross-gr': [
         { x: 50, y: 46, title: 'Airbag original', text: 'Componente de seguridad 100% original de fábrica.', side: 'right' },

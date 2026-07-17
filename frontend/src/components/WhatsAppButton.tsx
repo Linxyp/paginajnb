@@ -4,7 +4,7 @@ import { MessageCircle } from 'lucide-react';
 export default function WhatsAppButton() {
     const handleWspClick = () => {
         const message = "Hola JNB Importaciones, requiero asesoría personalizada para equipar mi vehículo con tecnología Android.";
-        window.open(`https://wa.me/573000000000?text=${encodeURIComponent(message)}`, '_blank');
+        window.open(`https://wa.me/573132602527?text=${encodeURIComponent(message)}`, '_blank');
     };
 
     return (

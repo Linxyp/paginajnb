@@ -23,7 +23,9 @@ db.exec(`
     price INTEGER NOT NULL CHECK (price >= 0),
     stock INTEGER NOT NULL DEFAULT 0 CHECK (stock >= 0),
     status TEXT NOT NULL DEFAULT 'Activo',
-    images TEXT NOT NULL DEFAULT '[]'
+    images TEXT NOT NULL DEFAULT '[]',
+    vehicleBrand TEXT NOT NULL DEFAULT 'Universal',
+    vehicleModel TEXT NOT NULL DEFAULT ''
   );
 
   CREATE TABLE IF NOT EXISTS orders (
@@ -36,6 +38,7 @@ db.exec(`
     address TEXT NOT NULL,
     city TEXT NOT NULL,
     notes TEXT NOT NULL DEFAULT '',
+    vehicle TEXT NOT NULL DEFAULT '',
     payment_method TEXT NOT NULL,
     status TEXT NOT NULL DEFAULT 'pendiente',
     subtotal INTEGER NOT NULL,
@@ -54,6 +57,21 @@ db.exec(`
     subtotal INTEGER NOT NULL
   );
 `);
+
+// Migrations for databases created before these columns existed (CREATE TABLE
+// IF NOT EXISTS above only applies to brand-new databases, not already-existing ones).
+const orderColumns = db.prepare("PRAGMA table_info(orders)").all() as { name: string }[];
+if (!orderColumns.some((c) => c.name === 'vehicle')) {
+    db.exec("ALTER TABLE orders ADD COLUMN vehicle TEXT NOT NULL DEFAULT ''");
+}
+
+const productColumns = db.prepare("PRAGMA table_info(products)").all() as { name: string }[];
+if (!productColumns.some((c) => c.name === 'vehicleBrand')) {
+    db.exec("ALTER TABLE products ADD COLUMN vehicleBrand TEXT NOT NULL DEFAULT 'Universal'");
+}
+if (!productColumns.some((c) => c.name === 'vehicleModel')) {
+    db.exec("ALTER TABLE products ADD COLUMN vehicleModel TEXT NOT NULL DEFAULT ''");
+}
 
 export function withTransaction<T>(fn: () => T): T {
     db.exec('BEGIN IMMEDIATE');

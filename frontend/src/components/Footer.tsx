@@ -1,3 +1,6 @@
+import Link from 'next/link';
+import { Phone, MessageCircle } from 'lucide-react';
+
 export default function Footer() {
     return (
         <footer className="bg-[#07070b] text-white border-t border-white/5 mt-auto">
@@ -17,7 +20,16 @@ export default function Footer() {
                 <div>
                     <h3 className="text-lg font-bold mb-3">Contacto</h3>
                     <p className="text-gray-500">Bogotá D.C, Colombia</p>
-                    <p className="text-gray-500 mt-1">Soporte Técnico Certificado</p>
+                    <a href="tel:+573132602527" className="text-gray-400 hover:text-[#ff2d42] transition-colors mt-2 flex items-center gap-2">
+                        <Phone size={14} /> +57 313 260 2527
+                    </a>
+                    <Link
+                        href="https://wa.me/573132602527"
+                        target="_blank"
+                        className="text-gray-400 hover:text-[#25D366] transition-colors mt-1.5 flex items-center gap-2"
+                    >
+                        <MessageCircle size={14} /> Escríbenos por WhatsApp
+                    </Link>
                 </div>
             </div>
             <div className="border-t border-white/5 text-center py-4 text-xs text-gray-600">

@@ -8,6 +8,7 @@ import Reveal from "@/components/motion/Reveal";
 import TiltStage from "@/components/motion/TiltStage";
 import SpecChip from "@/components/motion/SpecChip";
 import ScrollStory from "@/components/motion/ScrollStory";
+import CompatibilityBanner from "@/components/CompatibilityBanner";
 import Link from "next/link";
 import { MessageCircle, ArrowLeft, ShieldCheck, Tag, Award } from "lucide-react";
 import { getProductBySlug } from "@/lib/api";
@@ -57,7 +58,7 @@ export default async function ProductPage({ params }: PageProps) {
     if (!product) notFound();
 
     const wspMessage = `Hola JNB Importaciones, estoy interesado en este producto: ${product.name} (Ref: ${product.id})`;
-    const wspLink = `https://wa.me/573000000000?text=${encodeURIComponent(wspMessage)}`;
+    const wspLink = `https://wa.me/573132602527?text=${encodeURIComponent(wspMessage)}`;
     const lowStock = product.stock > 0 && product.stock <= 5;
     const story = productStories[product.slug];
 
@@ -153,6 +154,8 @@ export default async function ProductPage({ params }: PageProps) {
                             <p className="text-gray-400 text-sm mt-5 leading-relaxed max-w-lg">
                                 {product.description}
                             </p>
+
+                            <CompatibilityBanner product={product} />
 
                             <div className="mt-7 hidden lg:block">
                                 <AddToCartButton product={product} />

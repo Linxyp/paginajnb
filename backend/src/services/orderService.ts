@@ -20,6 +20,7 @@ export interface CreateOrderInput {
     customerEmail: string;
     address: string;
     city: string;
+    vehicle: string;
     notes: string;
     paymentMethod: 'contraentrega' | 'whatsapp';
     items: OrderItemInput[];
@@ -41,6 +42,7 @@ export interface OrderRecord {
     customerEmail: string;
     address: string;
     city: string;
+    vehicle: string;
     notes: string;
     paymentMethod: string;
     status: string;
@@ -95,10 +97,10 @@ export const createOrder = (input: CreateOrderInput): OrderRecord => {
         const insertOrder = db.prepare(`
             INSERT INTO orders (
                 order_number, access_token, customer_name, customer_phone, customer_email,
-                address, city, notes, payment_method, status, subtotal, shipping_cost, total
+                address, city, vehicle, notes, payment_method, status, subtotal, shipping_cost, total
             ) VALUES (
                 @order_number, @access_token, @customer_name, @customer_phone, @customer_email,
-                @address, @city, @notes, @payment_method, 'pendiente', @subtotal, @shipping_cost, @total
+                @address, @city, @vehicle, @notes, @payment_method, 'pendiente', @subtotal, @shipping_cost, @total
             )
         `);
 
@@ -111,6 +113,7 @@ export const createOrder = (input: CreateOrderInput): OrderRecord => {
             customer_email: input.customerEmail,
             address: input.address,
             city: input.city,
+            vehicle: input.vehicle,
             notes: input.notes,
             payment_method: input.paymentMethod,
             subtotal,
@@ -147,6 +150,7 @@ export const createOrder = (input: CreateOrderInput): OrderRecord => {
             customerEmail: input.customerEmail,
             address: input.address,
             city: input.city,
+            vehicle: input.vehicle,
             notes: input.notes,
             paymentMethod: input.paymentMethod,
             status: 'pendiente',
@@ -167,6 +171,7 @@ interface OrderRow {
     customer_email: string;
     address: string;
     city: string;
+    vehicle: string;
     notes: string;
     payment_method: string;
     status: string;
@@ -200,6 +205,7 @@ export const getOrderByAccessToken = (token: string): OrderRecord | undefined =>
         customerEmail: row.customer_email,
         address: row.address,
         city: row.city,
+        vehicle: row.vehicle,
         notes: row.notes,
         paymentMethod: row.payment_method,
         status: row.status,

@@ -23,7 +23,7 @@ export default function ContactoPage() {
                         <Phone className="text-[#C1121F] flex-shrink-0 mt-1" size={24} />
                         <div>
                             <h4 className="font-bold text-[#2B2D42]">WhatsApp / Teléfono</h4>
-                            <p className="text-gray-500 text-sm mt-1">+57 300 000 0000</p>
+                            <p className="text-gray-500 text-sm mt-1">+57 313 260 2527</p>
                         </div>
                     </div>
 

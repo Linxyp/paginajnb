@@ -13,6 +13,8 @@ export const sampleCatalog: UpsertProductInput[] = [
         stock: 40,
         status: 'Activo',
         images: ['tweeter-jnb-3.png'],
+        vehicleBrand: 'Universal',
+        vehicleModel: '',
     },
     {
         id: 'REF102',
@@ -26,6 +28,8 @@ export const sampleCatalog: UpsertProductInput[] = [
         stock: 35,
         status: 'Activo',
         images: ['tweeter-jnb-caja-sonido.png'],
+        vehicleBrand: 'Universal',
+        vehicleModel: '',
     },
     {
         id: 'REF103',
@@ -38,7 +42,9 @@ export const sampleCatalog: UpsertProductInput[] = [
         price: 2350000,
         stock: 6,
         status: 'Activo',
-        images: ['radio-toyota-4runner-2017.webp'],
+        images: ['radio-toyota-4runner-2017-studio.png'],
+        vehicleBrand: 'Toyota',
+        vehicleModel: '4Runner',
     },
     {
         id: 'REF104',
@@ -51,7 +57,9 @@ export const sampleCatalog: UpsertProductInput[] = [
         price: 210000,
         stock: 15,
         status: 'Activo',
-        images: ['tercer-stop-led-fortuner.webp'],
+        images: ['tercer-stop-led-fortuner-studio.png'],
+        vehicleBrand: 'Toyota',
+        vehicleModel: 'Fortuner',
     },
     {
         id: 'REF105',
@@ -65,6 +73,8 @@ export const sampleCatalog: UpsertProductInput[] = [
         stock: 4,
         status: 'Activo',
         images: ['timon-corolla-cross-gr.png'],
+        vehicleBrand: 'Toyota',
+        vehicleModel: 'Corolla Cross',
     },
     {
         id: 'REF106',
@@ -78,6 +88,8 @@ export const sampleCatalog: UpsertProductInput[] = [
         stock: 3,
         status: 'Activo',
         images: ['timon-lexus-carbono.png'],
+        vehicleBrand: 'Lexus',
+        vehicleModel: 'Varios modelos (F Sport)',
     },
     {
         id: 'REF107',
@@ -91,6 +103,8 @@ export const sampleCatalog: UpsertProductInput[] = [
         stock: 5,
         status: 'Activo',
         images: ['timon-palo-rosa-toyota.png'],
+        vehicleBrand: 'Toyota',
+        vehicleModel: 'Varios modelos',
     },
 ];
 

@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { getOrderByToken } from '@/lib/api';
-import { CheckCircle2, MessageCircle, Home } from 'lucide-react';
+import { CheckCircle2, MessageCircle, Home, Car } from 'lucide-react';
 import GlowOrbs from '@/components/motion/GlowOrbs';
 
 interface PageProps {
@@ -21,8 +21,28 @@ export default async function OrderConfirmationPage({ params }: PageProps) {
 
     if (!order) notFound();
 
-    const wspMessage = `Hola JNB Importaciones, quiero confirmar mi pedido ${order.orderNumber} por un total de $${fmt(order.total)}.`;
-    const wspLink = `https://wa.me/573000000000?text=${encodeURIComponent(wspMessage)}`;
+    const orderDate = new Date(order.createdAt + 'Z').toLocaleString('es-CO', {
+        dateStyle: 'medium',
+        timeStyle: 'short',
+    });
+
+    const wspMessage = [
+        `Hola JNB Importaciones, quiero confirmar mi pedido:`,
+        ``,
+        `📦 Pedido: ${order.orderNumber}`,
+        `👤 Nombre: ${order.customerName}`,
+        `📱 Teléfono: ${order.customerPhone}`,
+        `🚗 Vehículo: ${order.vehicle}`,
+        ``,
+        `🛒 Productos:`,
+        ...order.items.map((i) => `• ${i.quantity}x ${i.productName} — $${fmt(i.subtotal)}`),
+        ``,
+        `📍 Dirección: ${order.address}, ${order.city}`,
+        order.notes ? `📝 Observaciones: ${order.notes}` : null,
+        `💰 Total: $${fmt(order.total)}`,
+        `🕐 Fecha: ${orderDate}`,
+    ].filter(Boolean).join('\n');
+    const wspLink = `https://wa.me/573132602527?text=${encodeURIComponent(wspMessage)}`;
 
     return (
         <div className="w-full bg-[#07070b] min-h-screen">
@@ -69,9 +89,25 @@ export default async function OrderConfirmationPage({ params }: PageProps) {
                     <h2 className="font-black text-white mb-3">Datos de entrega</h2>
                     <p className="text-sm text-gray-400">{order.customerName} · {order.customerPhone}</p>
                     <p className="text-sm text-gray-400">{order.address}, {order.city}</p>
+                    {order.vehicle && (
+                        <p className="text-sm text-gray-300 mt-2 flex items-center gap-1.5 font-semibold">
+                            <Car size={14} className="text-[#ff2d42]" /> {order.vehicle}
+                        </p>
+                    )}
                     <p className="text-sm text-gray-400 mt-2 font-semibold">Método: {paymentLabels[order.paymentMethod] || order.paymentMethod}</p>
                     <p className="text-sm mt-2">
                         Estado: <span className="font-bold text-orange-400 uppercase">{order.status}</span>
+                    </p>
+                </div>
+
+                <div className="jnb-glass rounded-xl p-6 mb-6 border-[#25D366]/30">
+                    <div className="flex items-center gap-2 mb-2">
+                        <MessageCircle size={18} className="text-[#25D366]" />
+                        <h2 className="font-black text-white">Último paso: confirma por WhatsApp</h2>
+                    </div>
+                    <p className="text-sm text-gray-400 leading-relaxed">
+                        Tu pedido ya quedó registrado. Toca el botón para enviarnos los datos por WhatsApp —
+                        un asesor te contactará personalmente para confirmar disponibilidad, coordinar el pago y el envío.
                     </p>
                 </div>
 
@@ -79,7 +115,7 @@ export default async function OrderConfirmationPage({ params }: PageProps) {
                     <Link
                         href={wspLink}
                         target="_blank"
-                        className="flex-1 bg-[#25D366] hover:bg-[#20ba59] text-white font-bold py-4 px-6 rounded-lg transition-colors flex items-center justify-center gap-2 shadow-md"
+                        className="flex-1 bg-[#25D366] hover:bg-[#20ba59] text-white font-bold py-4 px-6 rounded-lg transition-transform hover:scale-[1.02] flex items-center justify-center gap-2 shadow-[0_0_30px_rgba(37,211,102,0.35)]"
                     >
                         <MessageCircle size={20} />
                         Confirmar por WhatsApp

@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { useCartStore } from '@/store/useCartStore';
 import { Search, ShoppingCart, Menu, User, X, ChevronDown, Phone, MapPin } from 'lucide-react';
 import { useState, useEffect, useRef } from 'react';
+import GarageBadge from './GarageBadge';
 
 const navCategories = [
     {
@@ -87,7 +88,7 @@ export default function Navbar() {
             {/* ── TOPBAR ── */}
             <div className="bg-[#C1121F] text-white text-[10px] font-bold py-1.5 px-6 flex items-center justify-between tracking-widest uppercase">
                 <span className="flex items-center gap-1.5">
-                    <Phone size={10} /> +57 310 000 0000
+                    <Phone size={10} /> +57 313 260 2527
                 </span>
                 <span>Envíos a nivel nacional · Instalación profesional garantizada</span>
                 <span className="hidden md:flex items-center gap-1.5">
@@ -206,6 +207,8 @@ export default function Navbar() {
                         </nav>
 
                         <div className="flex items-center gap-5">
+                            <GarageBadge className="hidden md:flex hover:text-[#ff2d42]" />
+
                             <button className="hidden sm:block hover:text-[#C1121F] transition-colors">
                                 <User size={22} strokeWidth={2} />
                             </button>
@@ -240,8 +243,12 @@ export default function Navbar() {
             {/* ── MOBILE MENU ── */}
             {mobileOpen && (
                 <div className="lg:hidden bg-[#1a1b22] border-t border-gray-800">
+                    {/* Mobile garage badge */}
+                    <div className="px-6 pt-5">
+                        <GarageBadge className="bg-white/5 border border-white/10 rounded-lg px-4 py-3 w-full justify-center" />
+                    </div>
                     {/* Mobile search */}
-                    <div className="px-6 pt-5 pb-3">
+                    <div className="px-6 pt-4 pb-3">
                         <form onSubmit={handleSubmit} className="flex gap-2">
                             <input
                                 type="text"

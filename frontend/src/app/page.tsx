@@ -15,6 +15,7 @@ import SpecChip from '@/components/motion/SpecChip';
 import ParallaxHero from '@/components/motion/ParallaxHero';
 import LazyAmbientBg from '@/components/three/LazyAmbientBg';
 import LazyProductCarousel3D from '@/components/three/LazyProductCarousel3D';
+import GarageCallout from '@/components/GarageCallout';
 
 // ─── DATA ────────────────────────────────────────────────────────────────────
 
@@ -39,7 +40,7 @@ const heroSlides = [
     price: 2350000,
     oldPrice: null,
     discount: 0,
-    image: 'radio-toyota-4runner-2017.webp',
+    image: 'radio-toyota-4runner-2017-studio.png',
     slug: 'radio-toyota-4runner-2017',
     watermark: 'ANDROID',
   },
@@ -380,7 +381,7 @@ export default function HomePage() {
           🚗 Envío <span className="text-[#ff2d42] font-bold">GRATIS</span> en compras superiores a $500.000 COP
         </span>
         <span className="hidden md:block">
-          Asesoría: <span className="text-white font-bold">+57 310 000 0000</span>
+          Asesoría: <span className="text-white font-bold">+57 313 260 2527</span>
         </span>
       </div>
 
@@ -389,6 +390,9 @@ export default function HomePage() {
 
       {/* ── HERO CAROUSEL ──────────────────────────────────────── */}
       <HeroCarousel />
+
+      {/* ── MI GARAJE ──────────────────────────────────────────── */}
+      <GarageCallout />
 
       {/* ── CATEGORY PILLS ─────────────────────────────────────── */}
       <div className="bg-[#0b0b12] border-b border-white/5 px-6 md:px-10 py-4 flex gap-2.5 overflow-x-auto jnb-scrollbar-none">

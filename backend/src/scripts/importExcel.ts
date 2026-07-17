@@ -52,6 +52,8 @@ const run = (): void => {
             images: [row.ImagenPrincipal, row.ImagenSecundaria, row.ImagenTerciaria]
                 .filter(Boolean)
                 .map(String),
+            vehicleBrand: String(row.MarcaVehiculo || 'Universal'),
+            vehicleModel: String(row.ModeloVehiculo || ''),
         };
         upsertProduct(product);
         imported++;
