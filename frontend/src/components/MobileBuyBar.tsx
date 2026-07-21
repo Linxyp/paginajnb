@@ -2,6 +2,7 @@
 import { useRouter } from 'next/navigation';
 import { useCartStore } from '@/store/useCartStore';
 import { useToastStore } from '@/store/useToastStore';
+import { trackEvent } from '@/lib/analytics';
 import { Zap, ShoppingCart } from 'lucide-react';
 
 const fmt = (n: number) => new Intl.NumberFormat('es-CO').format(n);
@@ -27,6 +28,7 @@ export default function MobileBuyBar({ product }: Props) {
             image: product.images[0] || '',
             maxStock: product.stock,
         }, 1);
+        trackEvent({ name: 'add_to_cart', productId: product.id, productName: product.name, price: product.price, quantity: 1 });
         router.push('/checkout');
     };
 
@@ -40,6 +42,7 @@ export default function MobileBuyBar({ product }: Props) {
             image: product.images[0] || '',
             maxStock: product.stock,
         }, 1);
+        trackEvent({ name: 'add_to_cart', productId: product.id, productName: product.name, price: product.price, quantity: 1 });
         showToast(`"${product.name}" añadido al carrito.`, 'success');
     };
 

@@ -16,6 +16,7 @@ import ParallaxHero from '@/components/motion/ParallaxHero';
 import LazyAmbientBg from '@/components/three/LazyAmbientBg';
 import LazyProductCarousel3D from '@/components/three/LazyProductCarousel3D';
 import GarageCallout from '@/components/GarageCallout';
+import { trackEvent } from '@/lib/analytics';
 
 // ─── DATA ────────────────────────────────────────────────────────────────────
 
@@ -266,6 +267,7 @@ function ProductCard({ p }: { p: Product }) {
       image: p.images[0] || '',
       maxStock: p.stock,
     }, 1);
+    trackEvent({ name: 'add_to_cart', productId: p.id, productName: p.name, price: p.price, quantity: 1 });
     showToast(`"${p.name}" añadido al carrito.`, 'success');
   };
 

@@ -1,5 +1,5 @@
-import Link from 'next/link';
 import { Phone, MessageCircle } from 'lucide-react';
+import WhatsAppLink from './WhatsAppLink';
 
 export default function Footer() {
     return (
@@ -23,13 +23,12 @@ export default function Footer() {
                     <a href="tel:+573132602527" className="text-gray-400 hover:text-[#ff2d42] transition-colors mt-2 flex items-center gap-2">
                         <Phone size={14} /> +57 313 260 2527
                     </a>
-                    <Link
+                    <WhatsAppLink
                         href="https://wa.me/573132602527"
-                        target="_blank"
                         className="text-gray-400 hover:text-[#25D366] transition-colors mt-1.5 flex items-center gap-2"
                     >
                         <MessageCircle size={14} /> Escríbenos por WhatsApp
-                    </Link>
+                    </WhatsAppLink>
                 </div>
             </div>
             <div className="border-t border-white/5 text-center py-4 text-xs text-gray-600">

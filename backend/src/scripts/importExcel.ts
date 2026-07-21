@@ -1,3 +1,7 @@
+// SECURITY NOTE: xlsx@0.18.5 has known unpatched advisories (prototype pollution / ReDoS) on npm —
+// the maintainer moved fixes to their own CDN instead of publishing here. Risk is low in this specific
+// use: this script only runs locally against a file you provide yourself, it's never exposed to the
+// internet or arbitrary user uploads. Revisit if this ever accepts untrusted files.
 import * as xlsx from 'xlsx';
 import path from 'path';
 import fs from 'fs';

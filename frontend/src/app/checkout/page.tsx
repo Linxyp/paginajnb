@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useCartStore } from '@/store/useCartStore';
@@ -7,6 +7,7 @@ import { useCartHydrated } from '@/store/useCartHydrated';
 import { useToastStore } from '@/store/useToastStore';
 import { createOrder, ApiError } from '@/lib/api';
 import { useGarageStore, formatVehicle } from '@/store/useGarageStore';
+import { trackEvent } from '@/lib/analytics';
 import { ArrowLeft, Truck, MessageCircle, Lock, Car } from 'lucide-react';
 
 const fmt = (n: number) => new Intl.NumberFormat('es-CO').format(n);
@@ -55,10 +56,18 @@ export default function CheckoutPage() {
     const [orderPlaced, setOrderPlaced] = useState(false);
     const hydrated = useCartHydrated();
     const garageVehicle = useGarageStore((s) => s.vehicle);
+    const trackedCheckoutStart = useRef(false);
 
     useEffect(() => {
         if (hydrated && !orderPlaced && items.length === 0) router.replace('/carrito');
     }, [hydrated, orderPlaced, items.length, router]);
+
+    useEffect(() => {
+        if (hydrated && items.length > 0 && !trackedCheckoutStart.current) {
+            trackedCheckoutStart.current = true;
+            trackEvent({ name: 'begin_checkout', value: getTotal(), itemCount: items.reduce((n, i) => n + i.quantity, 0) });
+        }
+    }, [hydrated, items, getTotal]);
 
     // Prefill from "Mi Garaje" if the customer already saved a vehicle, without overwriting anything they've typed.
     useEffect(() => {

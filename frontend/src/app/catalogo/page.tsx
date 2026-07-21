@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { getAllProducts } from '@/lib/api';
 import CatalogGrid from '@/components/CatalogGrid';
+import Breadcrumbs from '@/components/Breadcrumbs';
 
 export const metadata: Metadata = {
     title: 'Catálogo de Productos | JNB Importaciones',
@@ -13,6 +14,7 @@ export default async function CatalogPage() {
 
     return (
         <div className="w-full bg-[#07070b] min-h-screen">
+            <Breadcrumbs items={[{ label: 'Inicio', href: '/' }, { label: 'Catálogo' }]} />
             <div className="relative overflow-hidden jnb-grid-bg border-b border-white/5 py-14 px-4">
                 <div className="absolute inset-0 jnb-radial-red opacity-70" />
                 <div className="relative max-w-7xl mx-auto">

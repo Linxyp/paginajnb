@@ -3,6 +3,8 @@ import { notFound } from 'next/navigation';
 import { getOrderByToken } from '@/lib/api';
 import { CheckCircle2, MessageCircle, Home, Car } from 'lucide-react';
 import GlowOrbs from '@/components/motion/GlowOrbs';
+import PurchaseTracker from '@/components/PurchaseTracker';
+import WhatsAppLink from '@/components/WhatsAppLink';
 
 interface PageProps {
     params: Promise<{ token: string }>;
@@ -46,6 +48,7 @@ export default async function OrderConfirmationPage({ params }: PageProps) {
 
     return (
         <div className="w-full bg-[#07070b] min-h-screen">
+            <PurchaseTracker orderId={order.orderNumber} value={order.total} />
             <div className="relative overflow-hidden jnb-grid-bg border-b border-white/5 py-16 px-4">
                 <div className="absolute inset-0 jnb-radial-red opacity-60" />
                 <GlowOrbs />
@@ -112,14 +115,13 @@ export default async function OrderConfirmationPage({ params }: PageProps) {
                 </div>
 
                 <div className="flex flex-col sm:flex-row gap-4">
-                    <Link
+                    <WhatsAppLink
                         href={wspLink}
-                        target="_blank"
                         className="flex-1 bg-[#25D366] hover:bg-[#20ba59] text-white font-bold py-4 px-6 rounded-lg transition-transform hover:scale-[1.02] flex items-center justify-center gap-2 shadow-[0_0_30px_rgba(37,211,102,0.35)]"
                     >
                         <MessageCircle size={20} />
                         Confirmar por WhatsApp
-                    </Link>
+                    </WhatsAppLink>
                     <Link
                         href="/"
                         className="flex-1 border border-white/15 hover:border-white/40 text-white font-bold py-4 px-6 rounded-lg transition-colors flex items-center justify-center gap-2"

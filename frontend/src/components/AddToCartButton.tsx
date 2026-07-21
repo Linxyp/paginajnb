@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useCartStore } from '@/store/useCartStore';
 import { useToastStore } from '@/store/useToastStore';
+import { trackEvent } from '@/lib/analytics';
 import { ShoppingCart, Minus, Plus, Zap } from 'lucide-react';
 
 interface ProductProps {
@@ -34,6 +35,7 @@ export default function AddToCartButton({ product }: ProductProps) {
             image: product.images[0] || '',
             maxStock: product.stock,
         }, quantity);
+        trackEvent({ name: 'add_to_cart', productId: product.id, productName: product.name, price: product.price, quantity });
         return true;
     };
 

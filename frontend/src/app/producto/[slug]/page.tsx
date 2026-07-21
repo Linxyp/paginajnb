@@ -9,9 +9,14 @@ import TiltStage from "@/components/motion/TiltStage";
 import SpecChip from "@/components/motion/SpecChip";
 import ScrollStory from "@/components/motion/ScrollStory";
 import CompatibilityBanner from "@/components/CompatibilityBanner";
+import Breadcrumbs from "@/components/Breadcrumbs";
+import ProductFAQ from "@/components/ProductFAQ";
+import RelatedProducts from "@/components/RelatedProducts";
+import ViewItemTracker from "@/components/ViewItemTracker";
+import WhatsAppLink from "@/components/WhatsAppLink";
 import Link from "next/link";
 import { MessageCircle, ArrowLeft, ShieldCheck, Tag, Award } from "lucide-react";
-import { getProductBySlug } from "@/lib/api";
+import { getProductBySlug, getAllProducts } from "@/lib/api";
 import { productStories } from "@/lib/productStories";
 
 interface PageProps {
@@ -57,6 +62,7 @@ export default async function ProductPage({ params }: PageProps) {
 
     if (!product) notFound();
 
+    const allProducts = await getAllProducts();
     const wspMessage = `Hola JNB Importaciones, estoy interesado en este producto: ${product.name} (Ref: ${product.id})`;
     const wspLink = `https://wa.me/573132602527?text=${encodeURIComponent(wspMessage)}`;
     const lowStock = product.stock > 0 && product.stock <= 5;
@@ -83,6 +89,17 @@ export default async function ProductPage({ params }: PageProps) {
     return (
         <div className="w-full bg-[#07070b] min-h-screen pb-24 lg:pb-0">
             <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+            <ViewItemTracker productId={product.id} productName={product.name} price={product.price} category={product.category} />
+
+            <Breadcrumbs
+                items={[
+                    { label: 'Inicio', href: '/' },
+                    { label: 'Catálogo', href: '/catalogo' },
+                    { label: product.category, href: `/catalogo?cat=${encodeURIComponent(product.category)}` },
+                    { label: product.name },
+                ]}
+            />
+
             {/* ── HERO ─────────────────────────────────────────────── */}
             <section
                 className="relative overflow-hidden border-b border-white/5 jnb-photo-hero"
@@ -161,14 +178,13 @@ export default async function ProductPage({ params }: PageProps) {
                                 <AddToCartButton product={product} />
                             </div>
 
-                            <Link
+                            <WhatsAppLink
                                 href={wspLink}
-                                target="_blank"
                                 className="hidden lg:flex mt-3 w-full items-center justify-center gap-2 border border-[#25D366]/40 text-[#25D366] font-bold py-3 rounded-lg transition-colors hover:bg-[#25D366]/10 text-sm"
                             >
                                 <MessageCircle size={18} />
                                 Asesoría directa por WhatsApp
-                            </Link>
+                            </WhatsAppLink>
 
                             <TrustBadges className="mt-8" />
                         </Reveal>
@@ -196,6 +212,12 @@ export default async function ProductPage({ params }: PageProps) {
                     <p className="text-sm text-gray-300 font-semibold leading-relaxed">{product.compatibility}</p>
                 </Reveal>
             </section>
+
+            {/* ── FAQ ──────────────────────────────────────────────── */}
+            <ProductFAQ productName={product.name} />
+
+            {/* ── RELATED PRODUCTS ─────────────────────────────────── */}
+            <RelatedProducts current={product} all={allProducts} />
 
             {/* ── MOBILE STICKY BUY BAR ───────────────────────────── */}
             <MobileBuyBar product={product} />
