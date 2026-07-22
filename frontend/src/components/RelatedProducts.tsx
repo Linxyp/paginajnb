@@ -4,8 +4,7 @@ import { ArrowRight } from 'lucide-react';
 import type { Product } from '@/lib/api';
 import Reveal from './motion/Reveal';
 import { StaggerGroup, StaggerItem } from './motion/StaggerGroup';
-
-const fmt = (n: number) => new Intl.NumberFormat('es-CO').format(n);
+import PriceBlock from './PriceBlock';
 
 /** Picks up to `limit` other products, prioritizing shared category then shared vehicle brand. */
 function pickRelated(current: Product, all: Product[], limit = 3): Product[] {
@@ -43,9 +42,9 @@ export default function RelatedProducts({ current, all }: { current: Product; al
                                 <div className="min-w-0 flex-1">
                                     <div className="text-[9px] font-extrabold uppercase text-[#ff2d42] tracking-widest">{p.category}</div>
                                     <h3 className="text-sm font-bold text-white mt-0.5 line-clamp-1 group-hover:text-[#ff2d42] transition-colors">{p.name}</h3>
-                                    <div className="flex items-center justify-between mt-1.5">
-                                        <span className="font-black text-sm text-white">${fmt(p.price)}</span>
-                                        <ArrowRight size={14} className="text-gray-600 group-hover:text-[#ff2d42] group-hover:translate-x-0.5 transition-all" />
+                                    <div className="flex items-center justify-between mt-1.5 gap-2">
+                                        <PriceBlock id={p.id} price={p.price} size="sm" />
+                                        <ArrowRight size={14} className="shrink-0 text-gray-600 group-hover:text-[#ff2d42] group-hover:translate-x-0.5 transition-all" />
                                     </div>
                                 </div>
                             </Link>

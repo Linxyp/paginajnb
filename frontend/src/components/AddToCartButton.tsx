@@ -1,6 +1,7 @@
 'use client';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { motion } from 'framer-motion';
 import { useCartStore } from '@/store/useCartStore';
 import { useToastStore } from '@/store/useToastStore';
 import { trackEvent } from '@/lib/analytics';
@@ -84,14 +85,25 @@ export default function AddToCartButton({ product }: ProductProps) {
                 </button>
             </div>
 
-            <button
+            <motion.button
                 onClick={handleBuyNow}
                 disabled={outOfStock}
-                className="w-full relative overflow-hidden bg-gradient-to-r from-[#C1121F] to-[#ff2d42] disabled:from-gray-700 disabled:to-gray-700 disabled:cursor-not-allowed text-white font-black py-4 px-6 rounded-lg transition-transform hover:scale-[1.015] active:scale-[0.99] flex items-center justify-center gap-2 text-sm tracking-widest uppercase shadow-[0_0_35px_rgba(255,45,66,0.35)]"
+                animate={outOfStock ? {} : {
+                    scale: [1, 1.035, 1],
+                    boxShadow: [
+                        '0 0 20px rgba(255,45,66,0.35)',
+                        '0 0 45px rgba(255,45,66,0.65)',
+                        '0 0 20px rgba(255,45,66,0.35)',
+                    ],
+                }}
+                transition={{ duration: 1.8, repeat: Infinity, ease: 'easeInOut' }}
+                whileHover={outOfStock ? {} : { scale: 1.06 }}
+                whileTap={outOfStock ? {} : { scale: 0.97 }}
+                className="w-full relative overflow-hidden bg-gradient-to-r from-[#C1121F] to-[#ff2d42] disabled:from-gray-700 disabled:to-gray-700 disabled:cursor-not-allowed text-white font-black py-4 px-6 rounded-lg flex items-center justify-center gap-2 text-sm tracking-widest uppercase"
             >
                 <Zap size={18} className="fill-white" />
                 Comprar ahora
-            </button>
+            </motion.button>
         </div>
     );
 }

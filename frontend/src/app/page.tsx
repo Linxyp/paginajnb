@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
+import { motion } from 'framer-motion';
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { ChevronLeft, ChevronRight, ShoppingBag, PackageSearch, Sparkles, Truck } from 'lucide-react';
 import { getAllProducts, Product } from '@/lib/api';
@@ -16,55 +17,70 @@ import ParallaxHero from '@/components/motion/ParallaxHero';
 import LazyAmbientBg from '@/components/three/LazyAmbientBg';
 import LazyProductCarousel3D from '@/components/three/LazyProductCarousel3D';
 import GarageCallout from '@/components/GarageCallout';
+import PriceBlock from '@/components/PriceBlock';
+import FlashTimerBadge from '@/components/FlashTimerBadge';
 import { trackEvent } from '@/lib/analytics';
+import { NEW_PRODUCT_SLUGS, getDiscountPercent } from '@/lib/urgency';
 
 // ─── DATA ────────────────────────────────────────────────────────────────────
 
 const heroSlides = [
   {
+    id: 'REF109',
+    tag: '🆕 Recién Llegado',
+    mood: 'Mejor señal, mejor visión.',
+    title: 'Cámara 2 AHD PRO\nPara Radios Android',
+    sub: 'Formato AHD de alta definición, visión nocturna y guía de estacionamiento en pantalla. El complemento ideal para tu radio Android JNB.',
+    image: 'camara-2.png',
+    slug: 'camara-2',
+    watermark: 'AHD',
+  },
+  {
+    id: 'REF108',
+    tag: '🆕 Recién Llegado',
+    mood: 'Reversa con total confianza.',
+    title: 'Cámara de Reversa\nVisión Nocturna',
+    sub: '8 LED de alta luminosidad, gran angular y guía de estacionamiento. Se conecta por RCA a cualquier radio, sin cambiar tu equipo.',
+    image: 'camara-reversa-hd.png',
+    slug: 'camara-reversa-hd',
+    watermark: 'VISION',
+  },
+  {
+    id: 'REF110',
+    tag: '🆕 Recién Llegado',
+    mood: 'Sin cables, sin complicaciones.',
+    title: 'CarPlay Inalámbrico\n2 en 1',
+    sub: 'Convierte tu CarPlay o Android Auto cableado en inalámbrico en segundos. Plug & play, conexión estable.',
+    image: 'carplay-inalambrico-2en1.png',
+    slug: 'carplay-inalambrico-2en1',
+    watermark: 'WIRELESS',
+  },
+  {
+    id: 'REF106',
     tag: '🏁 Edición Premium',
     mood: 'Control absoluto, en tus manos.',
     title: 'Timón Lexus\nFibra de Carbono',
     sub: 'Inserciones en fibra de carbono real, cuero premium y controles multifunción. Acabado línea F.',
-    price: 1780000,
-    oldPrice: null,
-    discount: 0,
     image: 'timon-lexus-carbono.png',
     slug: 'timon-lexus-carbono',
     watermark: 'CARBON',
   },
   {
+    id: 'REF103',
     tag: '🔥 Más Vendido',
     mood: 'Tu tablero, del futuro.',
     title: 'Radio Android\nToyota 4Runner',
     sub: 'Pantalla vertical estilo Tesla, 4GB/64GB, CarPlay y Android Auto inalámbricos. Control climático integrado.',
-    price: 2350000,
-    oldPrice: null,
-    discount: 0,
     image: 'radio-toyota-4runner-2017-studio.png',
     slug: 'radio-toyota-4runner-2017',
     watermark: 'ANDROID',
   },
   {
-    tag: '⚡ Nuevo Ingreso',
-    mood: 'Agudos que se sienten cristalinos.',
-    title: 'Tweeter\nJNB PRO',
-    sub: 'Cúpula reforzada para agudos sin distorsión. Cuerpo en aluminio mecanizado, acabado premium.',
-    price: 95000,
-    oldPrice: 115000,
-    discount: 17,
-    image: 'tweeter-jnb-3.png',
-    slug: 'tweeter-jnb-3',
-    watermark: 'AUDIO',
-  },
-  {
+    id: 'REF107',
     tag: '🎯 Estilo Clásico',
     mood: 'Elegancia que se siente al conducir.',
     title: 'Timón Palo Rosa\nToyota',
     sub: 'Acabado en palo rosa y cuero negro, controles multifunción integrados. Elegancia clásica para tu interior.',
-    price: 1120000,
-    oldPrice: null,
-    discount: 0,
     image: 'timon-palo-rosa-toyota.png',
     slug: 'timon-palo-rosa-toyota',
     watermark: 'PREMIUM',
@@ -82,7 +98,7 @@ const tickerItems = [
 
 const brands = ['Toyota', 'Lexus', 'Mazda', 'Nissan', 'Honda', 'Chevrolet', 'Ford', 'Kia', 'Hyundai', 'Renault'];
 
-const categories = ['Todos', 'Radios Android', 'Car Audio', 'Iluminación LED', 'Interior'];
+const categories = ['Todos', 'Radios Android', 'Car Audio', 'Cámaras y Seguridad', 'Multimedia y Conectividad', 'Iluminación LED', 'Interior'];
 
 const stats = [
   { target: 1200, suffix: '+', label: 'Instalaciones Realizadas' },
@@ -90,10 +106,6 @@ const stats = [
   { target: 8,    suffix: '',  label: 'Años de Experiencia' },
   { target: 4.9,  suffix: '★', label: 'Calificación Promedio', isFloat: true },
 ];
-
-// ─── HELPERS ─────────────────────────────────────────────────────────────────
-
-const fmt = (n: number) => new Intl.NumberFormat('es-CO').format(n);
 
 // ─── SUB-COMPONENTS ──────────────────────────────────────────────────────────
 
@@ -117,7 +129,7 @@ function Ticker() {
 }
 
 /** Auto-rotating hero carousel with a floating tilt-3d product visual */
-function HeroCarousel() {
+function HeroCarousel({ products }: { products: Product[] }) {
   const [current, setCurrent] = useState(0);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
@@ -138,6 +150,8 @@ function HeroCarousel() {
   const resumeAuto = () => startAuto();
 
   const slide = heroSlides[current];
+  const slideProduct = products.find((p) => p.slug === slide.slug);
+  const isNewSlide = NEW_PRODUCT_SLUGS.includes(slide.slug);
 
   return (
     <section
@@ -172,16 +186,14 @@ function HeroCarousel() {
               {slide.sub}
             </p>
 
-            <div className="flex items-baseline gap-3 mt-5">
-              <span className="text-3xl font-black text-white jnb-glow-text">${fmt(slide.price)}</span>
-              {slide.oldPrice && (
-                <span className="text-base text-[#666] line-through">${fmt(slide.oldPrice)}</span>
-              )}
-              {slide.discount > 0 && (
-                <span className="bg-[#C1121F] text-white text-[11px] font-extrabold px-2.5 py-1">
-                  -{slide.discount}%
-                </span>
-              )}
+            {slideProduct && (
+              <div className="mt-5">
+                <PriceBlock id={slideProduct.id} price={slideProduct.price} size="md" />
+              </div>
+            )}
+
+            <div className="mt-3">
+              <FlashTimerBadge id={slide.id} />
             </div>
 
             <div className="flex gap-3 mt-7">
@@ -210,7 +222,7 @@ function HeroCarousel() {
               </div>
             </TiltStage>
             <div className="absolute -left-8 top-4 z-10">
-              <SpecChip icon={<Sparkles size={14} />} label={slide.discount > 0 ? 'Oferta' : 'Destacado'} value={slide.discount > 0 ? `-${slide.discount}% hoy` : 'Pieza original'} delay={0.2} />
+              <SpecChip icon={<Sparkles size={14} />} label={isNewSlide ? 'Nuevo' : 'Oferta'} value={slideProduct ? `-${getDiscountPercent(slideProduct.id)}% hoy` : 'Precio especial'} delay={0.2} />
             </div>
             <div className="absolute -right-6 bottom-10 z-10">
               <SpecChip icon={<Truck size={14} />} label="Entrega" value="Envío nacional" delay={0.7} />
@@ -280,6 +292,13 @@ function ProductCard({ p }: { p: Product }) {
           </span>
         </div>
       )}
+      {NEW_PRODUCT_SLUGS.includes(p.slug) && (
+        <div className="absolute top-3 right-3 z-10">
+          <span className="inline-flex items-center gap-1 text-[9px] font-extrabold tracking-[.15em] uppercase px-2 py-1 bg-gradient-to-r from-[#C1121F] to-[#ff2d42] text-white rounded">
+            <Sparkles size={10} /> Nuevo
+          </span>
+        </div>
+      )}
 
       <Link href={`/producto/${p.slug}`} className="block">
         {/* Image area */}
@@ -297,8 +316,8 @@ function ProductCard({ p }: { p: Product }) {
           </h3>
 
           {/* Price */}
-          <div className="flex items-baseline gap-2 mt-2">
-            <span className="text-[20px] font-black text-white">${fmt(p.price)}</span>
+          <div className="mt-2">
+            <PriceBlock id={p.id} price={p.price} size="sm" />
           </div>
         </div>
       </Link>
@@ -313,6 +332,82 @@ function ProductCard({ p }: { p: Product }) {
         </button>
       </div>
     </div>
+  );
+}
+
+/** Highlight strip for the 3 newest products, with its own flash-timer + pulsing CTA per card. */
+function NewArrivals({ products }: { products: Product[] }) {
+  const items = NEW_PRODUCT_SLUGS
+    .map((slug) => products.find((p) => p.slug === slug))
+    .filter((p): p is Product => Boolean(p));
+
+  if (items.length === 0) return null;
+
+  return (
+    <section className="relative max-w-[1400px] mx-auto px-6 md:px-8 mt-14">
+      <Reveal>
+        <div className="flex items-center gap-3 mb-2">
+          <span className="inline-flex items-center gap-1.5 bg-gradient-to-r from-[#C1121F] to-[#ff2d42] text-white text-[10px] font-extrabold tracking-[.2em] uppercase px-3 py-1.5 rounded-full">
+            <Sparkles size={12} /> Recién Llegados
+          </span>
+        </div>
+        <h2 className="text-2xl font-black text-white uppercase tracking-widest">Nuevos Lanzamientos</h2>
+        <p className="text-gray-500 text-xs mt-2 max-w-md">
+          Los 3 productos más recientes del catálogo, con precio de lanzamiento por tiempo limitado.
+        </p>
+      </Reveal>
+
+      <StaggerGroup className="grid grid-cols-1 md:grid-cols-3 gap-5 mt-7">
+        {items.map((p) => (
+          <StaggerItem key={p.id}>
+            <Link
+              href={`/producto/${p.slug}`}
+              className="group relative block jnb-glass rounded-2xl overflow-hidden border border-[#C1121F]/25 hover:border-[#ff2d42]/60 transition-all hover:-translate-y-1"
+            >
+              <div className="relative w-full h-56 bg-black/20 border-b border-white/5 overflow-hidden">
+                {p.images[0] && (
+                  <Image src={`/productos/${p.images[0]}`} alt={p.name} fill className="object-contain p-6 transition-transform duration-500 group-hover:scale-105" />
+                )}
+                <div className="absolute top-3 left-3">
+                  <span className="inline-flex items-center gap-1 text-[9px] font-extrabold uppercase tracking-widest px-2 py-1 bg-gradient-to-r from-[#C1121F] to-[#ff2d42] text-white rounded">
+                    <Sparkles size={10} /> Nuevo
+                  </span>
+                </div>
+              </div>
+
+              <div className="p-5">
+                <div className="text-[9px] font-bold tracking-[.18em] uppercase text-[#ff2d42] mb-1.5">{p.category}</div>
+                <h3 className="text-sm font-bold text-white uppercase tracking-wide leading-snug h-9 line-clamp-2 group-hover:text-[#ff2d42] transition-colors">
+                  {p.name}
+                </h3>
+
+                <div className="mt-2">
+                  <PriceBlock id={p.id} price={p.price} size="md" />
+                </div>
+
+                <div className="mt-3">
+                  <FlashTimerBadge id={p.id} compact />
+                </div>
+
+                <motion.div
+                  animate={{
+                    boxShadow: [
+                      '0 0 12px rgba(255,45,66,0.25)',
+                      '0 0 26px rgba(255,45,66,0.5)',
+                      '0 0 12px rgba(255,45,66,0.25)',
+                    ],
+                  }}
+                  transition={{ duration: 1.8, repeat: Infinity, ease: 'easeInOut' }}
+                  className="mt-4 w-full flex items-center justify-center gap-2 bg-gradient-to-r from-[#C1121F] to-[#ff2d42] text-white text-[11px] font-black uppercase tracking-widest py-3 rounded-lg"
+                >
+                  Ver Oferta
+                </motion.div>
+              </div>
+            </Link>
+          </StaggerItem>
+        ))}
+      </StaggerGroup>
+    </section>
   );
 }
 
@@ -391,7 +486,7 @@ export default function HomePage() {
       <Ticker />
 
       {/* ── HERO CAROUSEL ──────────────────────────────────────── */}
-      <HeroCarousel />
+      <HeroCarousel products={products} />
 
       {/* ── MI GARAJE ──────────────────────────────────────────── */}
       <GarageCallout />
@@ -412,6 +507,11 @@ export default function HomePage() {
           </button>
         ))}
       </div>
+
+      {/* ── NUEVOS LANZAMIENTOS ─────────────────────────────────── */}
+      {!loadingProducts && (
+        <NewArrivals products={products} />
+      )}
 
       {/* ── PROMO BANNERS ──────────────────────────────────────── */}
       <div className="max-w-[1400px] mx-auto px-6 md:px-8 mt-10 grid grid-cols-1 md:grid-cols-2 gap-5">

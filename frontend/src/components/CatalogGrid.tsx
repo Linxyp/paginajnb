@@ -2,14 +2,14 @@
 import { useState, useMemo } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { PackageSearch, CheckCircle2, Car } from 'lucide-react';
+import { PackageSearch, CheckCircle2, Car, Sparkles } from 'lucide-react';
 import type { Product } from '@/lib/api';
 import { useGarageStore, formatVehicle } from '@/store/useGarageStore';
 import { useGarageHydrated } from '@/store/useGarageHydrated';
 import { isCompatible } from '@/lib/compatibility';
 import { StaggerGroup, StaggerItem } from '@/components/motion/StaggerGroup';
-
-const fmt = (n: number) => new Intl.NumberFormat('es-CO').format(n);
+import PriceBlock from '@/components/PriceBlock';
+import { NEW_PRODUCT_SLUGS } from '@/lib/urgency';
 
 export default function CatalogGrid({ products }: { products: Product[] }) {
     const [onlyCompatible, setOnlyCompatible] = useState(false);
@@ -65,6 +65,11 @@ export default function CatalogGrid({ products }: { products: Product[] }) {
                                         <CheckCircle2 size={10} /> Compatible
                                     </span>
                                 )}
+                                {NEW_PRODUCT_SLUGS.includes(p.slug) && (
+                                    <span className="absolute top-3 right-3 z-10 bg-gradient-to-r from-[#C1121F] to-[#ff2d42] text-white text-[9px] font-extrabold uppercase tracking-widest px-2 py-1 rounded flex items-center gap-1">
+                                        <Sparkles size={10} /> Nuevo
+                                    </span>
+                                )}
                                 <div className="relative w-full h-48 bg-black/20 border-b border-white/5">
                                     {p.images[0] && (
                                         <Image src={`/productos/${p.images[0]}`} alt={p.name} fill className="object-contain p-5 transition-transform duration-500 group-hover:scale-105" />
@@ -74,9 +79,9 @@ export default function CatalogGrid({ products }: { products: Product[] }) {
                                     <span className="text-[10px] font-extrabold uppercase text-[#ff2d42] tracking-widest">{p.category}</span>
                                     <h2 className="font-bold text-sm text-white mt-1.5 line-clamp-2 h-10 group-hover:text-[#ff2d42] transition-colors">{p.name}</h2>
                                     <p className="text-xs text-gray-500 mt-2">Línea: {p.brand}</p>
-                                    <div className="mt-auto pt-4 border-t border-white/5 flex items-center justify-between">
-                                        <span className="font-black text-base text-white">${fmt(p.price)}</span>
-                                        <span className="bg-white/10 group-hover:bg-[#C1121F] text-white text-xs font-bold px-3 py-2 rounded-lg transition-colors">
+                                    <div className="mt-auto pt-4 border-t border-white/5 flex items-center justify-between gap-2">
+                                        <PriceBlock id={p.id} price={p.price} size="sm" />
+                                        <span className="shrink-0 bg-white/10 group-hover:bg-[#C1121F] text-white text-xs font-bold px-3 py-2 rounded-lg transition-colors">
                                             Ver Más
                                         </span>
                                     </div>

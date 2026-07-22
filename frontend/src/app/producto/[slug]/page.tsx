@@ -14,16 +14,19 @@ import ProductFAQ from "@/components/ProductFAQ";
 import RelatedProducts from "@/components/RelatedProducts";
 import ViewItemTracker from "@/components/ViewItemTracker";
 import WhatsAppLink from "@/components/WhatsAppLink";
+import PriceBlock from "@/components/PriceBlock";
+import FlashTimerBadge from "@/components/FlashTimerBadge";
+import CameraLiveDemo from "@/components/CameraLiveDemo";
 import Link from "next/link";
-import { MessageCircle, ArrowLeft, ShieldCheck, Tag, Award } from "lucide-react";
+import { MessageCircle, ArrowLeft, ShieldCheck, Tag, Award, Sparkles } from "lucide-react";
 import { getProductBySlug, getAllProducts } from "@/lib/api";
 import { productStories } from "@/lib/productStories";
+import { NEW_PRODUCT_SLUGS } from "@/lib/urgency";
 
 interface PageProps {
     params: Promise<{ slug: string }>;
 }
 
-const fmt = (n: number) => new Intl.NumberFormat('es-CO').format(n);
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://jnbimportaciones.com';
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
@@ -67,6 +70,7 @@ export default async function ProductPage({ params }: PageProps) {
     const wspLink = `https://wa.me/573132602527?text=${encodeURIComponent(wspMessage)}`;
     const lowStock = product.stock > 0 && product.stock <= 5;
     const story = productStories[product.slug];
+    const isNew = NEW_PRODUCT_SLUGS.includes(product.slug);
 
     const jsonLd = {
         '@context': 'https://schema.org',
@@ -142,9 +146,16 @@ export default async function ProductPage({ params }: PageProps) {
 
                         {/* Info */}
                         <Reveal className="order-2" y={16}>
-                            <span className="inline-block text-[10px] font-extrabold text-[#ff2d42] bg-[#C1121F]/10 border border-[#C1121F]/30 px-3 py-1.5 rounded-full uppercase tracking-[.2em]">
-                                {product.category}
-                            </span>
+                            <div className="flex items-center gap-2 flex-wrap">
+                                <span className="inline-block text-[10px] font-extrabold text-[#ff2d42] bg-[#C1121F]/10 border border-[#C1121F]/30 px-3 py-1.5 rounded-full uppercase tracking-[.2em]">
+                                    {product.category}
+                                </span>
+                                {isNew && (
+                                    <span className="inline-flex items-center gap-1 text-[10px] font-extrabold text-white bg-gradient-to-r from-[#C1121F] to-[#ff2d42] px-3 py-1.5 rounded-full uppercase tracking-[.2em]">
+                                        <Sparkles size={11} /> Nuevo Lanzamiento
+                                    </span>
+                                )}
+                            </div>
                             <p className="jnb-accent text-2xl text-gray-300 mt-4">Instalado hoy, sentido cada kilómetro.</p>
                             <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black text-white mt-2 tracking-tight leading-[1.05]">
                                 {product.name}
@@ -153,9 +164,13 @@ export default async function ProductPage({ params }: PageProps) {
                                 Ref. {product.id} · {product.brand}
                             </p>
 
-                            <div className="flex items-baseline gap-3 mt-6">
-                                <span className="text-4xl font-black text-white jnb-glow-text">${fmt(product.price)}</span>
+                            <div className="mt-6">
+                                <PriceBlock id={product.id} price={product.price} size="lg" />
                                 <span className="text-xs text-gray-500 font-semibold">COP</span>
+                            </div>
+
+                            <div className="mt-3">
+                                <FlashTimerBadge id={product.id} />
                             </div>
 
                             <div className="mt-2">
@@ -191,6 +206,11 @@ export default async function ProductPage({ params }: PageProps) {
                     </div>
                 </div>
             </section>
+
+            {/* ── EXPERIENCIA INTERACTIVA (solo Cámara 2) ─────────────── */}
+            {product.slug === 'camara-2' && product.images[0] && (
+                <CameraLiveDemo image={product.images[0]} name={product.name} />
+            )}
 
             {/* ── SCROLL STORY ─────────────────────────────────────── */}
             {story && product.images[0] && (

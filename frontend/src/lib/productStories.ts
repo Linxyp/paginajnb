@@ -40,4 +40,19 @@ export const productStories: Record<string, Callout[]> = {
         { x: 50, y: 47, title: 'Controles integrados', text: 'Multimedia y velocidad crucero al alcance de tus dedos.', side: 'right' },
         { x: 24, y: 76, title: 'Cuero premium', text: 'Costura reforzada para un agarre firme y duradero.', side: 'left' },
     ],
+    'camara-reversa-hd': [
+        { x: 68, y: 38, title: '8 LED de alta luminosidad', text: 'Visión nocturna nítida incluso en parqueaderos sin luz.', side: 'right' },
+        { x: 30, y: 55, title: 'Lente gran angular', text: 'Cubre todo el área trasera, sin puntos ciegos.', side: 'left' },
+        { x: 55, y: 75, title: 'Carcasa sellada', text: 'Metálica y resistente al agua — hecha para el día a día.', side: 'right' },
+    ],
+    'camara-2': [
+        { x: 30, y: 30, title: 'Pantalla con guía de estacionamiento', text: 'Líneas de referencia en vivo para calcular la distancia al reversar.', side: 'left' },
+        { x: 72, y: 55, title: 'Módulo AHD compacto', text: 'Se conecta directo a tu radio Android — señal más nítida que RCA.', side: 'right' },
+        { x: 45, y: 78, title: 'Aviso de seguridad en pantalla', text: '"Revisa el entorno" — un recordatorio visual cada vez que reversas.', side: 'left' },
+    ],
+    'carplay-inalambrico-2en1': [
+        { x: 78, y: 30, title: 'Plug & Play', text: 'Se conecta una sola vez al puerto USB original de tu radio.', side: 'right' },
+        { x: 25, y: 45, title: 'CarPlay + Android Auto', text: 'Un solo adaptador para los dos sistemas, sin cambiar de accesorio.', side: 'left' },
+        { x: 70, y: 68, title: 'WiFi estable', text: 'Conexión rápida y sin cortes, con actualizaciones OTA.', side: 'right' },
+    ],
 };
