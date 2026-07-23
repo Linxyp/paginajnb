@@ -83,10 +83,10 @@ export default function Navbar() {
     };
 
     return (
-        <header className={`w-full bg-[#111116] text-white sticky top-0 z-50 font-sans transition-shadow duration-300 ${scrolled ? 'shadow-2xl' : ''}`}>
+        <header className={`w-full bg-surface text-ink sticky top-0 z-50 font-sans border-b border-line transition-shadow duration-300 ${scrolled ? 'shadow-md' : ''}`}>
 
             {/* ── TOPBAR ── */}
-            <div className="bg-[#C1121F] text-white text-[10px] font-bold py-1.5 px-6 flex items-center justify-between tracking-widest uppercase">
+            <div className="bg-brand text-white text-[10px] font-bold py-1.5 px-6 flex items-center justify-between tracking-widest uppercase">
                 <span className="flex items-center gap-1.5">
                     <Phone size={10} /> +57 313 260 2527
                 </span>
@@ -113,11 +113,11 @@ export default function Navbar() {
                                             value={query}
                                             onChange={e => handleQuery(e.target.value)}
                                             placeholder="Buscar producto..."
-                                            className="w-64 bg-[#1e1f26] border border-gray-700 focus:border-[#C1121F] text-white text-sm px-4 py-2 outline-none placeholder-gray-500 transition-colors rounded-none"
+                                            className="w-64 bg-surface-alt border border-line focus:border-brand text-ink text-sm px-4 py-2 outline-none placeholder-ink-muted transition-colors rounded-none"
                                         />
                                         {/* Suggestions dropdown */}
                                         {filtered.length > 0 && (
-                                            <div className="absolute top-full left-0 w-full bg-[#1a1b22] border border-gray-700 border-t-0 z-50">
+                                            <div className="absolute top-full left-0 w-full bg-surface border border-line border-t-0 shadow-lg z-50">
                                                 {filtered.map(s => (
                                                     <button
                                                         key={s}
@@ -127,34 +127,34 @@ export default function Navbar() {
                                                             setFiltered([]);
                                                             window.location.href = `/catalogo?q=${encodeURIComponent(s)}`;
                                                         }}
-                                                        className="w-full text-left px-4 py-2.5 text-sm text-gray-300 hover:bg-[#C1121F] hover:text-white transition-colors flex items-center gap-2"
+                                                        className="w-full text-left px-4 py-2.5 text-sm text-ink-muted hover:bg-brand hover:text-white transition-colors flex items-center gap-2"
                                                     >
-                                                        <Search size={13} className="text-gray-500" />
+                                                        <Search size={13} className="text-ink-muted" />
                                                         {s}
                                                     </button>
                                                 ))}
                                             </div>
                                         )}
                                     </div>
-                                    <button type="submit" className="bg-[#C1121F] px-3 py-2 hover:bg-[#a00e18] transition-colors">
+                                    <button type="submit" className="bg-brand px-3 py-2 hover:bg-[#a00e18] text-white transition-colors">
                                         <Search size={18} />
                                     </button>
                                     <button type="button" onClick={() => { setSearchOpen(false); setQuery(''); setFiltered([]); }}>
-                                        <X size={18} className="text-gray-400 hover:text-white transition-colors" />
+                                        <X size={18} className="text-ink-muted hover:text-ink transition-colors" />
                                     </button>
                                 </form>
                             ) : (
-                                <button onClick={() => setSearchOpen(true)} className="hover:text-[#C1121F] transition-colors">
+                                <button onClick={() => setSearchOpen(true)} className="hover:text-brand transition-colors">
                                     <Search size={22} strokeWidth={2} />
                                 </button>
                             )}
                         </div>
 
                         {/* Desktop nav left */}
-                        <nav className="hidden lg:flex items-center gap-8 text-[11px] font-bold tracking-[0.15em] uppercase text-gray-300">
-                            <Link href="/" className="hover:text-white transition-colors relative group">
+                        <nav className="hidden lg:flex items-center gap-8 text-[11px] font-bold tracking-[0.15em] uppercase text-ink-muted">
+                            <Link href="/" className="hover:text-ink transition-colors relative group">
                                 Inicio
-                                <span className="absolute -bottom-1 left-0 w-full h-[2px] bg-[#C1121F] scale-x-0 group-hover:scale-x-100 transition-transform origin-left" />
+                                <span className="absolute -bottom-1 left-0 w-full h-[2px] bg-brand scale-x-0 group-hover:scale-x-100 transition-transform origin-left" />
                             </Link>
 
                             {/* Tienda with dropdown */}
@@ -163,16 +163,16 @@ export default function Navbar() {
                                 onMouseEnter={() => setDropdownOpen(true)}
                                 onMouseLeave={() => setDropdownOpen(false)}
                             >
-                                <button className="flex items-center gap-1 hover:text-white transition-colors">
+                                <button className="flex items-center gap-1 hover:text-ink transition-colors">
                                     Tienda <ChevronDown size={13} className={`transition-transform duration-200 ${dropdownOpen ? 'rotate-180' : ''}`} />
                                 </button>
                                 {dropdownOpen && (
-                                    <div className="absolute top-full left-0 mt-3 w-52 bg-[#1a1b22] border border-gray-800 shadow-2xl z-50">
+                                    <div className="absolute top-full left-0 mt-3 w-52 bg-surface border border-line shadow-lg z-50">
                                         {navCategories[0].sub.map(s => (
                                             <Link
                                                 key={s.href}
                                                 href={s.href}
-                                                className="block px-5 py-3 text-[11px] text-gray-300 hover:bg-[#C1121F] hover:text-white transition-colors tracking-widest uppercase font-bold border-b border-gray-800 last:border-0"
+                                                className="block px-5 py-3 text-[11px] text-ink-muted hover:bg-brand hover:text-white transition-colors tracking-widest uppercase font-bold border-b border-line last:border-0"
                                             >
                                                 {s.label}
                                             </Link>
@@ -185,54 +185,54 @@ export default function Navbar() {
 
                     {/* CENTER — Logo */}
                     <Link href="/" className="flex-shrink-0 flex flex-col items-center group">
-                        <span className="text-3xl lg:text-4xl font-black tracking-tighter text-white transition-transform group-hover:scale-105 italic">
-                            JNB<span className="text-[#C1121F]">IMPO</span>
+                        <span className="text-3xl lg:text-4xl font-black tracking-tighter text-ink transition-transform group-hover:scale-105 italic">
+                            JNB<span className="text-brand">IMPO</span>
                         </span>
-                        <span className="text-[9px] text-gray-400 tracking-[0.3em] uppercase mt-0.5 font-semibold">
+                        <span className="text-[9px] text-ink-muted tracking-[0.3em] uppercase mt-0.5 font-semibold">
                             Tecnología Vehicular
                         </span>
                     </Link>
 
                     {/* RIGHT — Nav + icons */}
                     <div className="flex-1 flex items-center justify-end gap-8">
-                        <nav className="hidden lg:flex items-center gap-8 text-[11px] font-bold tracking-[0.15em] uppercase text-gray-300">
-                            <Link href="/compatibilidad" className="hover:text-white transition-colors relative group">
+                        <nav className="hidden lg:flex items-center gap-8 text-[11px] font-bold tracking-[0.15em] uppercase text-ink-muted">
+                            <Link href="/compatibilidad" className="hover:text-ink transition-colors relative group">
                                 Vehículos
-                                <span className="absolute -bottom-1 left-0 w-full h-[2px] bg-[#C1121F] scale-x-0 group-hover:scale-x-100 transition-transform origin-left" />
+                                <span className="absolute -bottom-1 left-0 w-full h-[2px] bg-brand scale-x-0 group-hover:scale-x-100 transition-transform origin-left" />
                             </Link>
-                            <Link href="/contacto" className="hover:text-white transition-colors relative group">
+                            <Link href="/contacto" className="hover:text-ink transition-colors relative group">
                                 Servicio al Cliente
-                                <span className="absolute -bottom-1 left-0 w-full h-[2px] bg-[#C1121F] scale-x-0 group-hover:scale-x-100 transition-transform origin-left" />
+                                <span className="absolute -bottom-1 left-0 w-full h-[2px] bg-brand scale-x-0 group-hover:scale-x-100 transition-transform origin-left" />
                             </Link>
                         </nav>
 
                         <div className="flex items-center gap-5">
-                            <GarageBadge className="hidden md:flex hover:text-[#ff2d42]" />
+                            <GarageBadge className="hidden md:flex hover:text-brand-bright" />
 
-                            <button className="hidden sm:block hover:text-[#C1121F] transition-colors">
+                            <button className="hidden sm:block hover:text-brand transition-colors">
                                 <User size={22} strokeWidth={2} />
                             </button>
 
                             {/* Cart */}
-                            <Link href="/carrito" className="flex items-center gap-2.5 hover:text-[#C1121F] transition-colors group relative">
+                            <Link href="/carrito" className="flex items-center gap-2.5 hover:text-brand transition-colors group relative">
                                 <div className="relative">
                                     <ShoppingCart size={22} strokeWidth={2} />
                                     {totalItems > 0 && (
-                                        <span className="absolute -top-2 -right-2 bg-[#C1121F] text-white text-[9px] font-black w-4 h-4 rounded-full flex items-center justify-center">
+                                        <span className="absolute -top-2 -right-2 bg-brand text-white text-[9px] font-black w-4 h-4 rounded-full flex items-center justify-center">
                                             {totalItems}
                                         </span>
                                     )}
                                 </div>
                                 <div className="hidden sm:flex flex-col leading-none">
-                                    <span className="text-[9px] text-gray-400 uppercase tracking-wider font-bold">Carrito</span>
-                                    <span className="text-sm font-black text-white group-hover:text-[#C1121F] transition-colors">
+                                    <span className="text-[9px] text-ink-muted uppercase tracking-wider font-bold">Carrito</span>
+                                    <span className="text-sm font-black text-ink group-hover:text-brand transition-colors">
                                         ${totalValue.toLocaleString('es-CO')}
                                     </span>
                                 </div>
                             </Link>
 
                             {/* Mobile menu toggle */}
-                            <button onClick={() => setMobileOpen(!mobileOpen)} className="lg:hidden text-white hover:text-[#C1121F] transition-colors">
+                            <button onClick={() => setMobileOpen(!mobileOpen)} className="lg:hidden text-ink hover:text-brand transition-colors">
                                 {mobileOpen ? <X size={26} /> : <Menu size={26} />}
                             </button>
                         </div>
@@ -242,10 +242,10 @@ export default function Navbar() {
 
             {/* ── MOBILE MENU ── */}
             {mobileOpen && (
-                <div className="lg:hidden bg-[#1a1b22] border-t border-gray-800">
+                <div className="lg:hidden bg-surface border-t border-line">
                     {/* Mobile garage badge */}
                     <div className="px-6 pt-5">
-                        <GarageBadge className="bg-white/5 border border-white/10 rounded-lg px-4 py-3 w-full justify-center" />
+                        <GarageBadge className="bg-surface-alt border border-line rounded-lg px-4 py-3 w-full justify-center" />
                     </div>
                     {/* Mobile search */}
                     <div className="px-6 pt-4 pb-3">
@@ -255,24 +255,24 @@ export default function Navbar() {
                                 value={query}
                                 onChange={e => handleQuery(e.target.value)}
                                 placeholder="Buscar producto..."
-                                className="flex-1 bg-[#111116] border border-gray-700 focus:border-[#C1121F] text-white text-sm px-4 py-2.5 outline-none placeholder-gray-500 transition-colors"
+                                className="flex-1 bg-surface-alt border border-line focus:border-brand text-ink text-sm px-4 py-2.5 outline-none placeholder-ink-muted transition-colors"
                             />
-                            <button type="submit" className="bg-[#C1121F] px-4 py-2.5 hover:bg-[#a00e18] transition-colors">
+                            <button type="submit" className="bg-brand px-4 py-2.5 hover:bg-[#a00e18] text-white transition-colors">
                                 <Search size={18} />
                             </button>
                         </form>
                     </div>
 
-                    <nav className="flex flex-col px-6 pb-6 font-bold text-sm tracking-widest uppercase divide-y divide-gray-800">
-                        <Link href="/" onClick={() => setMobileOpen(false)} className="py-4 hover:text-[#C1121F] transition-colors">Inicio</Link>
-                        <Link href="/catalogo" onClick={() => setMobileOpen(false)} className="py-4 hover:text-[#C1121F] transition-colors">Tienda</Link>
+                    <nav className="flex flex-col px-6 pb-6 font-bold text-sm tracking-widest uppercase divide-y divide-line">
+                        <Link href="/" onClick={() => setMobileOpen(false)} className="py-4 hover:text-brand transition-colors">Inicio</Link>
+                        <Link href="/catalogo" onClick={() => setMobileOpen(false)} className="py-4 hover:text-brand transition-colors">Tienda</Link>
                         {navCategories[0].sub.map(s => (
-                            <Link key={s.href} href={s.href} onClick={() => setMobileOpen(false)} className="py-3 pl-4 text-[11px] text-gray-400 hover:text-[#C1121F] transition-colors">
+                            <Link key={s.href} href={s.href} onClick={() => setMobileOpen(false)} className="py-3 pl-4 text-[11px] text-ink-muted hover:text-brand transition-colors">
                                 → {s.label}
                             </Link>
                         ))}
-                        <Link href="/compatibilidad" onClick={() => setMobileOpen(false)} className="py-4 hover:text-[#C1121F] transition-colors">Vehículos</Link>
-                        <Link href="/contacto" onClick={() => setMobileOpen(false)} className="py-4 hover:text-[#C1121F] transition-colors">Servicio al Cliente</Link>
+                        <Link href="/compatibilidad" onClick={() => setMobileOpen(false)} className="py-4 hover:text-brand transition-colors">Vehículos</Link>
+                        <Link href="/contacto" onClick={() => setMobileOpen(false)} className="py-4 hover:text-brand transition-colors">Servicio al Cliente</Link>
                     </nav>
                 </div>
             )}

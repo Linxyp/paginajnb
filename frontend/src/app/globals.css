@@ -1,6 +1,18 @@
 @import "tailwindcss";
 
+@theme {
+  --color-surface: #ffffff;
+  --color-surface-alt: #F7F6F3;
+  --color-ink: #1B1B1F;
+  --color-ink-muted: #6B6B70;
+  --color-line: #E7E5E1;
+  --color-brand: #C1121F;
+  --color-brand-bright: #ff2d42;
+}
+
 :root {
+  /* Kept for the photo-hero sections (home hero, product hero) which stay
+     dramatic/dark on purpose even inside the light theme — see .jnb-photo-hero. */
   --jnb-bg: #07070b;
   --jnb-panel: #0e0e15;
   --jnb-border: rgba(255, 255, 255, 0.08);
@@ -10,8 +22,8 @@
 }
 
 body {
-  background-color: var(--jnb-bg);
-  color: #f4f5f7;
+  background-color: var(--color-surface);
+  color: var(--color-ink);
 }
 
 @keyframes ticker {
@@ -34,22 +46,35 @@ body {
   50% { opacity: 1; }
 }
 
-/* Faint technical grid used behind hero/dark sections for the "futuristic" feel */
+/* Faint technical grid used behind light page-title bands (catálogo, pedido,
+   compatibilidad headers) — kept subtle, ink-tinted instead of white-tinted now
+   that these bands sit on a light background. */
 .jnb-grid-bg {
   background-image:
-    linear-gradient(rgba(255, 255, 255, 0.045) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.045) 1px, transparent 1px);
+    linear-gradient(rgba(27, 27, 31, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(27, 27, 31, 0.05) 1px, transparent 1px);
   background-size: 44px 44px;
 }
 
 .jnb-radial-red {
-  background: radial-gradient(ellipse 60% 50% at 50% 0%, rgba(193, 18, 31, 0.35), transparent 70%);
+  background: radial-gradient(ellipse 60% 50% at 50% 0%, rgba(193, 18, 31, 0.10), transparent 70%);
 }
 
+/* Dark frosted glass — reserved for panels that sit ON TOP of a dark photo-hero
+   (.jnb-photo-hero), e.g. the product-stage card in the home/product hero. */
 .jnb-glass {
   background: rgba(255, 255, 255, 0.04);
   border: 1px solid var(--jnb-border);
   backdrop-filter: blur(16px);
+}
+
+/* Light elevated card — the default surface for everything NOT sitting on a dark
+   photo-hero: catalog/related cards, checkout panels, trust badges, FAQ, etc. */
+.jnb-card {
+  background: rgba(255, 255, 255, 0.75);
+  border: 1px solid var(--color-line);
+  backdrop-filter: blur(16px);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06);
 }
 
 .jnb-glow-text {

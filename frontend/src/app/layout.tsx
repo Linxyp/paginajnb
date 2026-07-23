@@ -29,7 +29,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="es">
-      <body className={`${inter.className} ${instrumentSerif.variable} bg-[#EDF2F4] text-[#2B2D42] min-h-screen flex flex-col antialiased`}>
+      <body className={`${inter.className} ${instrumentSerif.variable} bg-surface text-ink min-h-screen flex flex-col antialiased`}>
         <Navbar />
         <main className="flex-grow">{children}</main>
         <Footer />
