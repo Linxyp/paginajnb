@@ -12,14 +12,6 @@ export const productStories: Record<string, Callout[]> = {
         { x: 26, y: 55, title: 'Montaje angular', text: 'Se adapta a instalaciones donde el espacio recto no alcanza.', side: 'left' },
         { x: 55, y: 78, title: 'Terminales plug & play', text: 'Compatible con la mayoría de crossovers del mercado.', side: 'right' },
     ],
-    'radio-toyota-4runner-2017': [
-        { x: 50, y: 18, title: 'Pantalla vertical Android', text: 'Estilo Tesla, alta definición táctil, integrada en el marco original.', side: 'right' },
-        { x: 62, y: 27, title: 'Bluetooth y llamadas', text: 'Contesta llamadas y reproduce música sin usar el celular.', side: 'left' },
-        { x: 38, y: 34, title: 'Apple CarPlay / Android Auto', text: 'Conecta tu iPhone o Android de forma inalámbrica, sin cables.', side: 'right' },
-        { x: 65, y: 45, title: 'GPS integrado', text: 'Navegación sin depender de datos móviles del celular.', side: 'left' },
-        { x: 20, y: 20, title: 'Control climático táctil', text: 'Ajusta la temperatura del aire sin salir de la pantalla.', side: 'right' },
-        { x: 50, y: 76, title: '4GB RAM / 64GB', text: 'Suficiente potencia para navegación, música y apps sin trabarse.', side: 'left' },
-    ],
     'tercer-stop-led-fortuner': [
         { x: 45, y: 45, title: 'Barra LED secuencial', text: 'Encendido progresivo estilo OEM: mayor visibilidad al frenar.', side: 'right' },
         { x: 25, y: 30, title: 'Diseño estilo OEM', text: 'Se ve como una pieza de fábrica, no como un accesorio agregado.', side: 'left' },
@@ -54,5 +46,20 @@ export const productStories: Record<string, Callout[]> = {
         { x: 78, y: 30, title: 'Plug & Play', text: 'Se conecta una sola vez al puerto USB original de tu radio.', side: 'right' },
         { x: 25, y: 45, title: 'CarPlay + Android Auto', text: 'Un solo adaptador para los dos sistemas, sin cambiar de accesorio.', side: 'left' },
         { x: 70, y: 68, title: 'WiFi estable', text: 'Conexión rápida y sin cortes, con actualizaciones OTA.', side: 'right' },
+    ],
+    'subwoofer-jnb-caja': [
+        { x: 35, y: 45, title: 'Woofer + tweeter integrados', text: 'Graves profundos y agudos definidos en un solo panel frontal.', side: 'left' },
+        { x: 72, y: 25, title: 'Caja sellada reforzada', text: 'Enchapado texturizado resistente a golpes y vibración del baúl.', side: 'right' },
+        { x: 75, y: 80, title: 'Kit de cableado incluido', text: 'Poder, tierra, RCA y fusible listos para conectar al amplificador.', side: 'right' },
+    ],
+    'led-toyota-parrilla': [
+        { x: 45, y: 35, title: 'Letras TOYOTA iluminadas', text: 'Encienden junto con las luces de posición del vehículo.', side: 'right' },
+        { x: 80, y: 32, title: 'A juego con tus faros LED', text: 'Se integra con el resto de la iluminación frontal.', side: 'left' },
+        { x: 45, y: 60, title: 'Instalación directa', text: 'Reemplaza el emblema original, sin cortes ni empalmes.', side: 'right' },
+    ],
+    'amplificador-jnb-sl2000': [
+        { x: 45, y: 20, title: 'Chasís con disipador', text: 'Aluminio con disipación de calor para uso prolongado.', side: 'right' },
+        { x: 88, y: 48, title: 'Terminales chapados en oro', text: 'Conexión estable, sin pérdida de señal.', side: 'left' },
+        { x: 45, y: 75, title: '4 canales de potencia', text: 'Compatible con parlantes, tweeters y subwoofers.', side: 'right' },
     ],
 };
