@@ -47,13 +47,11 @@ function Card({ product, angle, radius, onHover }: { product: CarouselProduct; a
     );
 }
 
-function Ring({ products, onHover }: { products: CarouselProduct[]; onHover: (slug: string | null) => void }) {
+function Ring({ products, radius, onHover }: { products: CarouselProduct[]; radius: number; onHover: (slug: string | null) => void }) {
     const groupRef = useRef<THREE.Group>(null);
     const rotationVel = useRef(0.0025);
     const dragging = useRef(false);
     const lastX = useRef(0);
-
-    const radius = Math.max(2.4, products.length * 0.5);
 
     useFrame(() => {
         if (!groupRef.current) return;
@@ -86,15 +84,21 @@ function Ring({ products, onHover }: { products: CarouselProduct[]; onHover: (sl
 export default function ProductCarousel3D({ products }: { products: CarouselProduct[] }) {
     const [, setHoveredSlug] = useState<string | null>(null);
 
+    // Camera distance scales with the ring radius (which grows with product count)
+    // so the front-most card always sits comfortably back from the lens instead of
+    // getting closer/more cropped as more products are added to the catalog.
+    const radius = Math.max(2.4, products.length * 0.5);
+    const cameraDistance = radius + 4.2;
+
     return (
         <div className="w-full h-full cursor-grab active:cursor-grabbing">
             <Canvas
-                camera={{ position: [0, 0.2, 6.4], fov: 40 }}
+                camera={{ position: [0, 0.2, cameraDistance], fov: 36 }}
                 dpr={[1, 1.5]}
                 gl={{ antialias: true, alpha: true, powerPreference: 'low-power' }}
             >
                 <Suspense fallback={null}>
-                    <Ring products={products} onHover={setHoveredSlug} />
+                    <Ring products={products} radius={radius} onHover={setHoveredSlug} />
                 </Suspense>
             </Canvas>
         </div>
