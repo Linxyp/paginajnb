@@ -45,9 +45,9 @@ export const productStories: Record<string, Callout[]> = {
         { x: 30, y: 55, title: 'Lente gran angular', text: 'Cubre todo el área trasera, sin puntos ciegos.', side: 'left' },
         { x: 55, y: 75, title: 'Carcasa sellada', text: 'Metálica y resistente al agua — hecha para el día a día.', side: 'right' },
     ],
-    'camara-2': [
-        { x: 30, y: 30, title: 'Pantalla con guía de estacionamiento', text: 'Líneas de referencia en vivo para calcular la distancia al reversar.', side: 'left' },
-        { x: 72, y: 55, title: 'Módulo AHD compacto', text: 'Se conecta directo a tu radio Android — señal más nítida que RCA.', side: 'right' },
+    'radio-9-2din': [
+        { x: 30, y: 30, title: 'Pantalla de 9" con guía de estacionamiento', text: 'Líneas de referencia en vivo para calcular la distancia al reversar.', side: 'left' },
+        { x: 72, y: 55, title: 'Cámara de reversa incluida', text: 'Se conecta directo al radio — no tienes que comprarla aparte.', side: 'right' },
         { x: 45, y: 78, title: 'Aviso de seguridad en pantalla', text: '"Revisa el entorno" — un recordatorio visual cada vez que reversas.', side: 'left' },
     ],
     'carplay-inalambrico-2en1': [

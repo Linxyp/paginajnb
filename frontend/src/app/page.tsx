@@ -28,12 +28,12 @@ const heroSlides = [
   {
     id: 'REF109',
     tag: '🆕 Recién Llegado',
-    mood: 'Mejor señal, mejor visión.',
-    title: 'Cámara 2 AHD PRO\nPara Radios Android',
-    sub: 'Formato AHD de alta definición, visión nocturna y guía de estacionamiento en pantalla. El complemento ideal para tu radio Android JNB.',
-    image: 'camara-2.png',
-    slug: 'camara-2',
-    watermark: 'AHD',
+    mood: 'Todo incluido, sin sorpresas.',
+    title: 'Radio 9" 2 DIN\n4GB/64GB Android 15',
+    sub: 'CarPlay y Android Auto, Magic Box para inalámbrico y cámara de reversa incluida. Apto para cualquier vehículo.',
+    image: 'radio-9-2din.png',
+    slug: 'radio-9-2din',
+    watermark: 'ANDROID 15',
   },
   {
     id: 'REF108',

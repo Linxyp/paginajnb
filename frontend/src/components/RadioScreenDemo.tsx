@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
-import { Sun, Moon, Video, ShieldCheck, Waves } from 'lucide-react';
+import { Sun, Moon, Cpu, Smartphone, ShieldCheck } from 'lucide-react';
 import Reveal from '@/components/motion/Reveal';
 import { StaggerGroup, StaggerItem } from '@/components/motion/StaggerGroup';
 
@@ -12,19 +12,20 @@ interface Props {
 }
 
 const FEATURES = [
-    { icon: Video, title: 'Formato AHD', text: 'Señal de mayor definición que una cámara RCA — tu radio Android la interpreta de forma nativa.' },
-    { icon: Moon, title: 'Visión nocturna', text: 'LED infrarrojos para ver con claridad incluso en parqueaderos sin luz.' },
-    { icon: ShieldCheck, title: 'Guía de estacionamiento', text: 'Líneas de referencia en pantalla para calcular la distancia al reversar.' },
-    { icon: Waves, title: 'Sellada IP67', text: 'Resiste lluvia, polvo y la vibración del camino sin filtraciones.' },
+    { icon: Cpu, title: '4GB RAM / 64GB', text: 'Android 15 fluido — abre mapas, música y apps sin trabarse.' },
+    { icon: Smartphone, title: 'CarPlay & Android Auto', text: 'Incluye Magic Box para conectar tu teléfono también de forma inalámbrica.' },
+    { icon: ShieldCheck, title: 'Cámara de reversa incluida', text: 'Con guía de estacionamiento y visión nocturna en pantalla, sin costo aparte.' },
+    { icon: Moon, title: 'Visión nocturna', text: 'La cámara incluida ve con claridad incluso en parqueaderos sin luz.' },
 ];
 
 /**
- * Unique interactive hero for the "Cámara 2" product page: a stylized head-unit
- * frame with a day/night toggle and a scanning-light overlay. Explicitly labeled
- * as an illustrative recreation — the goal is to make the AHD image-quality pitch
+ * Unique interactive hero for the "Radio 9" product page: a stylized head-unit
+ * frame with a day/night toggle and a scanning-light overlay, showcasing the
+ * bundled reverse camera feed on the radio's own screen. Explicitly labeled as
+ * an illustrative recreation — the goal is to make the screen-quality pitch
  * tangible, not to claim it's a live feed from the customer's own camera.
  */
-export default function CameraLiveDemo({ image, name }: Props) {
+export default function RadioScreenDemo({ image, name }: Props) {
     const [mode, setMode] = useState<'dia' | 'noche'>('dia');
 
     return (
@@ -32,12 +33,12 @@ export default function CameraLiveDemo({ image, name }: Props) {
             <div className="absolute inset-0 jnb-grid-bg opacity-40" />
             <div className="relative max-w-4xl mx-auto text-center">
                 <Reveal>
-                    <p className="jnb-accent text-2xl text-gray-300">Mira cómo se ve en tu radio</p>
+                    <p className="jnb-accent text-2xl text-gray-300">Mira su pantalla en acción</p>
                     <h2 className="text-2xl sm:text-3xl font-black text-white uppercase tracking-widest mt-1">
                         Simulación de Pantalla en Vivo
                     </h2>
                     <p className="text-gray-500 text-xs mt-2 max-w-lg mx-auto">
-                        Recreación del feed de {name} sobre un radio Android — toca &ldquo;Noche&rdquo; para ver la visión nocturna en acción.
+                        Recreación de la pantalla de {name} mostrando la cámara de reversa incluida — toca &ldquo;Noche&rdquo; para ver la visión nocturna en acción.
                     </p>
                 </Reveal>
 
@@ -72,7 +73,7 @@ export default function CameraLiveDemo({ image, name }: Props) {
                             {/* REC badge */}
                             <div className="absolute top-3 left-3 flex items-center gap-1.5 bg-black/60 backdrop-blur-sm rounded-full px-2.5 py-1">
                                 <span className="w-1.5 h-1.5 rounded-full bg-[#ff2d42] animate-pulse" />
-                                <span className="text-[9px] font-bold text-white tracking-widest">AHD · CÁMARA 2</span>
+                                <span className="text-[9px] font-bold text-white tracking-widest">RADIO 9&Prime; · CÁM REVERSA</span>
                             </div>
 
                             {/* Mode badge */}
@@ -98,7 +99,7 @@ export default function CameraLiveDemo({ image, name }: Props) {
                         </div>
                     </div>
                     <p className="text-[10px] text-gray-600 mt-3 uppercase tracking-widest">
-                        *Recreación ilustrativa del feed — la imagen real depende de tu instalación
+                        *Recreación ilustrativa de pantalla — la imagen real depende de tu instalación
                     </p>
                 </Reveal>
 

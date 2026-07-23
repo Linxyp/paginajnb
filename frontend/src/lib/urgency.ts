@@ -26,4 +26,4 @@ export const getAnchorPrice = (price: number, id: string): number => {
 };
 
 /** Slugs of the newly-added products — used to show a "Nuevo" ribbon and to feature them on the home page. */
-export const NEW_PRODUCT_SLUGS = ['camara-reversa-hd', 'camara-2', 'carplay-inalambrico-2en1'];
+export const NEW_PRODUCT_SLUGS = ['camara-reversa-hd', 'radio-9-2din', 'carplay-inalambrico-2en1'];

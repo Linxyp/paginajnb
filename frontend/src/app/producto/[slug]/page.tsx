@@ -16,7 +16,7 @@ import ViewItemTracker from "@/components/ViewItemTracker";
 import WhatsAppLink from "@/components/WhatsAppLink";
 import PriceBlock from "@/components/PriceBlock";
 import FlashTimerBadge from "@/components/FlashTimerBadge";
-import CameraLiveDemo from "@/components/CameraLiveDemo";
+import RadioScreenDemo from "@/components/RadioScreenDemo";
 import Link from "next/link";
 import { MessageCircle, ArrowLeft, ShieldCheck, Tag, Award, Sparkles } from "lucide-react";
 import { getProductBySlug, getAllProducts } from "@/lib/api";
@@ -207,9 +207,9 @@ export default async function ProductPage({ params }: PageProps) {
                 </div>
             </section>
 
-            {/* ── EXPERIENCIA INTERACTIVA (solo Cámara 2) ─────────────── */}
-            {product.slug === 'camara-2' && product.images[0] && (
-                <CameraLiveDemo image={product.images[0]} name={product.name} />
+            {/* ── EXPERIENCIA INTERACTIVA (solo Radio 9) ──────────────── */}
+            {product.slug === 'radio-9-2din' && product.images[0] && (
+                <RadioScreenDemo image={product.images[0]} name={product.name} />
             )}
 
             {/* ── SCROLL STORY ─────────────────────────────────────── */}
