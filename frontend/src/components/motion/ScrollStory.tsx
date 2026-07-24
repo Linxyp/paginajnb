@@ -109,10 +109,14 @@ export default function ScrollStory({ image, alt, callouts }: ScrollStoryProps) 
                         />
                         <div
                             ref={(el) => { calloutRefs.current[i] = el; }}
-                            className={`absolute opacity-0 jnb-glass rounded-xl px-4 py-3 max-w-[220px] ${c.side === 'left' ? 'text-right' : ''}`}
+                            className={`absolute opacity-0 jnb-glass rounded-xl px-4 py-3 max-w-[190px] sm:max-w-[220px] ${c.side === 'left' ? 'text-right' : ''}`}
                             style={{
-                                left: c.side === 'left' ? undefined : `calc(${c.x}% + 24px)`,
-                                right: c.side === 'left' ? `calc(${100 - c.x}% + 24px)` : undefined,
+                                // clamped so the box never runs past the opposite edge on narrow
+                                // (mobile) viewports — without this, callouts near x≈75-80% would
+                                // push their text off-screen to the right (or the mirror case on
+                                // the left) and get visually cut off.
+                                left: c.side === 'left' ? undefined : `min(calc(${c.x}% + 24px), calc(100% - 210px))`,
+                                right: c.side === 'left' ? `min(calc(${100 - c.x}% + 24px), calc(100% - 210px))` : undefined,
                                 top: `calc(${c.y}% - 20px)`,
                             }}
                         >

@@ -30,7 +30,9 @@ export default function TiltStage({ children, className = '', strength = 10, glo
         ([gx, gy]) => `radial-gradient(circle at ${gx} ${gy}, rgba(255,255,255,0.18), transparent 45%)`
     );
 
-    const handleMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    // Pointer events (not mouse-only) so the tilt also responds to a finger
+    // drag on touch devices, not just a mouse hover on desktop.
+    const handleMove = (e: React.PointerEvent<HTMLDivElement>) => {
         const rect = ref.current?.getBoundingClientRect();
         if (!rect) return;
         mx.set((e.clientX - rect.left) / rect.width);
@@ -45,8 +47,9 @@ export default function TiltStage({ children, className = '', strength = 10, glo
     return (
         <div
             ref={ref}
-            onMouseMove={handleMove}
-            onMouseLeave={handleLeave}
+            onPointerMove={handleMove}
+            onPointerLeave={handleLeave}
+            onPointerUp={handleLeave}
             className={`relative [perspective:1200px] ${className}`}
         >
             <motion.div

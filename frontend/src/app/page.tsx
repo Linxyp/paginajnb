@@ -145,11 +145,11 @@ function HeroCarousel({ products }: { products: Product[] }) {
 
   return (
     <section
-      className="relative w-full min-h-[560px] py-14 md:py-0 md:h-[640px] border-b border-white/5"
+      className="relative w-full min-h-[560px] py-14 lg:py-0 lg:h-[640px] border-b border-white/5"
       onMouseEnter={pauseAuto}
       onMouseLeave={resumeAuto}
     >
-    <ParallaxHero backgroundImage="/fondos/garage-moody.jpg" className="w-full h-full min-h-[560px] md:min-h-[640px]">
+    <ParallaxHero backgroundImage="/fondos/garage-moody.jpg" className="w-full h-full min-h-[560px] lg:min-h-[640px]">
       {/* Watermark */}
       <div className="absolute right-0 top-0 h-full flex items-center justify-center w-1/2 pointer-events-none select-none">
         <span className="text-[200px] font-black text-white/[0.04] leading-none tracking-tighter uppercase">
@@ -158,10 +158,10 @@ function HeroCarousel({ products }: { products: Product[] }) {
       </div>
 
       {/* Content */}
-      <div className="relative z-10 h-full flex items-center px-6 sm:px-10 md:px-20 max-w-[1400px] mx-auto">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center w-full">
+      <div className="relative z-10 h-full flex items-center px-6 sm:px-10 md:px-20 py-10 lg:py-0 max-w-[1400px] mx-auto">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-10 items-center w-full">
           {/* Text */}
-          <div className="max-w-[560px]">
+          <div className="max-w-[560px] mx-auto lg:mx-0 text-center lg:text-left">
             <span className="inline-block bg-[#C1121F] text-white text-[10px] font-extrabold tracking-[.2em] uppercase px-3.5 py-1.5 mb-5">
               {slide.tag}
             </span>
@@ -177,16 +177,16 @@ function HeroCarousel({ products }: { products: Product[] }) {
             </p>
 
             {slideProduct && (
-              <div className="mt-5">
+              <div className="mt-5 flex justify-center lg:justify-start">
                 <PriceBlock id={slideProduct.id} price={slideProduct.price} size="md" />
               </div>
             )}
 
-            <div className="mt-3">
+            <div className="mt-3 flex justify-center lg:justify-start">
               <FlashTimerBadge id={slide.id} />
             </div>
 
-            <div className="flex gap-3 mt-7">
+            <div className="flex gap-3 mt-7 justify-center lg:justify-start">
               <Link
                 href={`/producto/${slide.slug}`}
                 className="bg-[#C1121F] text-white text-[11px] font-bold tracking-[.18em] uppercase px-7 py-3.5 transition-colors hover:bg-[#a00e18] shadow-[0_0_30px_rgba(193,18,31,0.4)]"
@@ -202,19 +202,19 @@ function HeroCarousel({ products }: { products: Product[] }) {
             </div>
           </div>
 
-          {/* Floating product visual */}
-          <div className="hidden lg:block relative">
+          {/* Floating product visual — visible on mobile too, below the CTAs */}
+          <div className="relative mt-2 lg:mt-0">
             <div className="absolute left-1/2 -translate-x-1/2 bottom-2 w-[55%] h-6 bg-black/70 blur-xl rounded-full" />
             <div className="absolute left-1/2 -translate-x-1/2 bottom-6 w-[65%] h-10 bg-[#C1121F]/30 blur-2xl rounded-full" />
-            <TiltStage key={slide.slug} className="w-full aspect-square max-w-[380px] mx-auto" strength={12}>
+            <TiltStage key={slide.slug} className="w-[78%] sm:w-full aspect-square max-w-[380px] mx-auto" strength={12}>
               <div className="relative w-full h-full jnb-glass rounded-3xl p-8 [transform:translateZ(30px)]">
                 <Image src={`/productos/${slide.image}`} alt={slide.title} fill className="object-contain p-6 drop-shadow-[0_25px_40px_rgba(0,0,0,0.6)]" priority />
               </div>
             </TiltStage>
-            <div className="absolute -left-8 top-4 z-10">
+            <div className="hidden sm:block absolute -left-8 top-4 z-10">
               <SpecChip icon={<Sparkles size={14} />} label={isNewSlide ? 'Nuevo' : 'Oferta'} value={slideProduct ? `-${getDiscountPercent(slideProduct.id)}% hoy` : 'Precio especial'} delay={0.2} />
             </div>
-            <div className="absolute -right-6 bottom-10 z-10">
+            <div className="hidden sm:block absolute -right-6 bottom-10 z-10">
               <SpecChip icon={<Truck size={14} />} label="Entrega" value="Envío nacional" delay={0.7} />
             </div>
           </div>
